@@ -21,6 +21,10 @@ $app = new \Slim\Slim(array(
     'templates.path' => __DIR__ . '/templates',
     'view' => $twigView,
 ));
+if (!file_exists(__DIR__ . '/../www/static')) {
+    require_once(__DIR__ . '/helpers/CFileHelper.php');
+    CFileHelper::copyDirectory(__DIR__ . '/templates/static', __DIR__ . '/../www/static');
+}
 
 require(__DIR__ . '/app.php');
 

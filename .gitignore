@@ -1,0 +1,6 @@
+vendor/*
+.idea/*
+protected/templates/cache/*
+www/static
+protected/config/params.php
+composer.lock
