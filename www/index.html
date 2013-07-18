@@ -1,13 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru" ng-app>
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>С тебя причитается</title>
-    <link rel="stylesheet" href="static/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="static/css/bootstrap.min.css" media="screen"/>
+    <link rel="stylesheet" href="static/css/bootstrap-glyphicons.min.css" media="screen"/>
+    <style>
+        .glyphicon::before {
+            font-size: smaller;
+        }
+    </style>
+    <!--<script src="static/js/bootstrap.min.js"></script>-->
     <script src="static/js/angular.min.js"></script>
 </head>
 <body>
-    <h1>С тебя причитается</h1>
-    <button class="btn"><i class="icon-search"></i> btn</button>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h3>С тебя причитается</h3>
+            <hr/>
+            <div class="list-group">
+                <div class="list-group-item text-success">
+                    <strong><span class="glyphicon glyphicon-arrow-down"></span> Вам должны</strong>
+                </div>
+                <a href="#" class="list-group-item">
+                    <span class="badge">230р.</span>
+                    <span class="list-group-item-text">to.merge@gmail.com</span>
+                </a>
+                <!--<div class="list-group-item">-->
+                    <!--<span class="badge">230р.</span>-->
+                    <!--<span class="list-group-item-text">to.merge@gmail.com</span>-->
+                    <!--&lt;!&ndash;<div class="btn-group btn-group-justified">&ndash;&gt;-->
+                        <!--<button class="btn btn-default" href="#">Простить</button>-->
+                        <!--<button class="btn btn-default" href="#">Напомнить</button>-->
+                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                <!--</div>-->
+            </div>
+            <div class="list-group">
+                <div class="list-group-item text-danger">
+                    <strong><span class="glyphicon glyphicon-arrow-up"></span> Вы задолжали</strong>
+                </div>
+                <a href="#" class="list-group-item">
+                    <span class="badge">230р.</span>
+                    <span class="list-group-item-text">to.merge@gmail.com</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
