@@ -4,8 +4,8 @@
 /** @var mixed $params */
 
 $app->get(
-    '/',
+    '/hello',
     function () use ($app) {
-        $app->render('index.twig');
+        echo "hello, world";
     }
 );

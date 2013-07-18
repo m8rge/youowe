@@ -1,3 +1,3 @@
 <?php
 
-require_once __DIR__ . '/../protected/index.php';
+require_once(__DIR__ . '/../protected/bootstrap.php');
