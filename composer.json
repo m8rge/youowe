@@ -1,0 +1,8 @@
+{
+    "require": {
+        "slim/slim": "2.*",
+        "twig/twig": "1.6.*",
+        "illuminate/database": "v4.0.5",
+        "slim/extras": "2.0.*"
+    }
+}
