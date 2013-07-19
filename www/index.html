@@ -11,26 +11,51 @@
         .glyphicon::before {
             font-size: smaller;
         }
+        input[type=search] {
+            border-radius: 17px 17px 17px 17px;
+            min-height: 32px;
+            padding: 6px 12px 6px 28px;
+        }
+        .search {
+            position: relative;
+        }
+        div.search .glyphicon {
+            color: #999999;
+            left: 13px;
+            position: absolute;
+            top: 0.6em;
+        }
+        /*.list-group-item > .pull-right {*/
+            /*margin-right: -15px;*/
+        /*}*/
     </style>
     <!--<script src="static/js/bootstrap.min.js"></script>-->
     <script src="static/js/angular.min.js"></script>
+    <script src="static/js/app.js"></script>
 </head>
-<body>
+<body ng-controller="YouOweApp">
 <div class="container">
     <div class="row">
         <div class="col-12">
             <h3>С тебя причитается</h3>
-            <hr/>
+            <!--<hr/>-->
+            <form action="" class="form-horizontal">
+                <div class="search">
+                    <span class="glyphicon glyphicon-search"></span>
+                    <input type="search" ng-model="query"/>
+                </div>
+            </form>
+            <!--<hr/>-->
             <div class="list-group">
                 <div class="list-group-item text-success">
                     <strong><span class="glyphicon glyphicon-arrow-down"></span> Вам должны</strong>
                 </div>
-                <a href="#" class="list-group-item">
-                    <span class="badge">230р.</span>
-                    <span class="list-group-item-text">to.merge@gmail.com</span>
+                <a href="#" class="list-group-item" ng-repeat="user in oweYou | filter:query">
+                    <span class="badge">{{ user.totalSum }}{{ currency }}</span>
+                    <span class="list-group-item-text">{{ user.email }}</span>
                 </a>
                 <!--<div class="list-group-item">-->
-                    <!--<span class="badge">230р.</span>-->
+                    <!--<span class="pull-right">230р.</span>-->
                     <!--<span class="list-group-item-text">to.merge@gmail.com</span>-->
                     <!--&lt;!&ndash;<div class="btn-group btn-group-justified">&ndash;&gt;-->
                         <!--<button class="btn btn-default" href="#">Простить</button>-->
@@ -42,9 +67,9 @@
                 <div class="list-group-item text-danger">
                     <strong><span class="glyphicon glyphicon-arrow-up"></span> Вы задолжали</strong>
                 </div>
-                <a href="#" class="list-group-item">
-                    <span class="badge">230р.</span>
-                    <span class="list-group-item-text">to.merge@gmail.com</span>
+                <a href="#" class="list-group-item" ng-repeat="user in youOwe | filter:query">
+                    <span class="badge">{{ user.totalSum }}{{ currency }}</span>
+                    <span class="list-group-item-text">{{ user.email }}</span>
                 </a>
             </div>
         </div>
