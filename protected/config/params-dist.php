@@ -1,6 +1,8 @@
 <?php
 
 return array(
+    'debug' => false,
+    'logoutSalt' => '',
     'db' => array(
         'driver' => 'mysql',
         'host' => '127.0.0.1',

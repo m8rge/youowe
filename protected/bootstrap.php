@@ -12,6 +12,8 @@ $capsule->addConnection($params['db']);
 $capsule->bootEloquent();
 
 $_SERVER['SCRIPT_NAME'] = 'index.php';
-$app = new \Slim\Slim();
+$app = new \Slim\Slim(array(
+    'debug' => $params['debug'],
+));
 require(__DIR__ . '/app.php');
 $app->run();
