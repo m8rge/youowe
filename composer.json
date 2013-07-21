@@ -2,5 +2,6 @@
     "require": {
         "slim/slim": "2.*",
         "illuminate/database": "v4.0.5",
+        "ircmaxell/password-compat": "1.0.3"
     }
 }

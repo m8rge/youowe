@@ -17,7 +17,7 @@ $app->get(
     $authenticate,
     function () use ($app) {
         $users = User::all(array('id', 'email'));
-        echo array('status' => 'ok', 'items' => $users->toJson());
+        echo json_encode(array('status' => 'ok', 'items' => $users->toArray()));
     }
 );
 
