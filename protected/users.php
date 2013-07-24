@@ -14,10 +14,10 @@ function generatePassword($length = 8) {
 
 $app->get(
     "/$apiVersion/users",
-    $authenticate,
+    $authenticate(),
     function () use ($app) {
         $users = User::all(array('id', 'email'));
-        echo json_encode(array('status' => 'ok', 'items' => $users->toArray()));
+        echo $users->toJson();
     }
 );
 
@@ -25,6 +25,10 @@ $app->post(
     "/$apiVersion/users",
     $requiredPostFields(array('email')),
     function () use ($app) {
+        if (User::where('email', '=', $_POST['email'])->count()) {
+            throw new UserException('email already exists');
+        }
+
         if (!empty($_POST['password'])) {
             $password = $_POST['password'];
         } else {
@@ -36,14 +40,22 @@ $app->post(
                 'password' => $password,
             )
         );
-        echo json_encode(array('status' => 'ok', 'id' => $user['id']));
+        $app->status(201);
+        echo $user->toJson();
     }
 );
 
 $app->put(
     "/$apiVersion/users/:id",
-    $authenticate,
+    $authenticate(),
     $requiredPostFields(array('password')),
-    function () use ($app) {
+    function ($id) use ($app) {
+        if ($_SESSION['user']['id'] != $id) {
+            throw new HttpException(403);
+        }
+        $user = User::findOrFail($id);
+        $user->password = $_POST['password'];
+        $user->save();
+        $app->status(204);
     }
 );

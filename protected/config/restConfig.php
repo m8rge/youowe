@@ -3,14 +3,24 @@
 /** @var \Slim\Slim $app */
 
 include_once(__DIR__ . '/../components/HttpException.php');
+include_once(__DIR__ . '/../components/UserException.php');
 
 $apiVersion = 'v1';
 $app->error(
     function (\Exception $e) use ($app) {
-        if ($e instanceof HttpException || $e instanceof UserException) {
+        if ($e instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
+            $status = 404;
+            $app->status($status);
+            echo json_encode(
+                array(
+                    'status' => $status,
+                    'message' => "Not Found",
+                )
+            );
+        } elseif ($e instanceof HttpException || $e instanceof UserException) {
             /** @var Exception $e */
             $status = $e->getCode() ? $e->getCode() : 500;
-            $app->response()->status($status);
+            $app->status($status);
             echo json_encode(
                 array(
                     'status' => $status,
