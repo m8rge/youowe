@@ -9,14 +9,22 @@ function ModelsArrayToArrayOfArrays($value) {
 }
 
 $app->get(
-    "/$apiVersion/debts",
+    "/$apiVersion/youowe.json",
     $authenticate(),
     function () use ($app) {
         $youOwe = Debt::where('sourceUserId', '=', $_SESSION['user']['id'])->get();
         $youOwe = array_map('ModelsArrayToArrayOfArrays', $youOwe);
+        echo json_encode($youOwe);
+    }
+);
+
+$app->get(
+    "/$apiVersion/oweyou.json",
+    $authenticate(),
+    function () use ($app) {
         $IOwe = Debt::where('destUserId', '=', $_SESSION['user']['id'])->get();
         $IOwe = array_map('ModelsArrayToArrayOfArrays', $IOwe);
-        echo json_encode(array('status' => 'ok', 'youOweMe' => $youOwe, 'IOweYou' => $IOwe));
+        echo json_encode($IOwe);
     }
 );
 
@@ -38,7 +46,7 @@ $app->post(
 );
 
 $app->get(
-    "/$apiVersion/debts/:id",
+    "/$apiVersion/debts/:id.json",
     $authenticate(),
     function ($id) use ($app) {
         $debt = Debt::findOrFail($id);
@@ -52,7 +60,7 @@ $app->get(
 );
 
 $app->delete(
-    "/$apiVersion/debts/:id",
+    "/$apiVersion/debts/:id.json",
     $authenticate(),
     function ($id) use ($app) {
         $debt = Debt::findOrFail($id);
