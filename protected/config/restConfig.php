@@ -4,6 +4,7 @@
 
 include_once(__DIR__ . '/../components/HttpException.php');
 include_once(__DIR__ . '/../components/UserException.php');
+include_once(__DIR__ . '/../components/JsonPostContentType.php');
 
 $apiVersion = 'v1';
 $app->error(
@@ -48,3 +49,4 @@ $app->hook(
         $app->contentType('application/json');
     }
 );
+$app->add(new \Slim\Middleware\JsonPostContentType());
