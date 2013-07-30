@@ -1,77 +1,77 @@
 <!DOCTYPE html>
-<html lang="ru" ng-app>
+<html lang="ru" ng-app="YouOweApp">
 <head>
     <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>С тебя причитается</title>
-    <link rel="stylesheet" href="static/css/bootstrap.min.css" media="screen"/>
-    <link rel="stylesheet" href="static/css/bootstrap-glyphicons.min.css" media="screen"/>
-    <style>
-        .glyphicon::before {
-            font-size: smaller;
-        }
-        input[type=search] {
-            border-radius: 17px 17px 17px 17px;
-            min-height: 32px;
-            padding: 6px 12px 6px 28px;
-        }
-        .search {
-            position: relative;
-        }
-        div.search .glyphicon {
-            color: #999999;
-            left: 13px;
-            position: absolute;
-            top: 0.6em;
-        }
-        /*.list-group-item > .pull-right {*/
-            /*margin-right: -15px;*/
-        /*}*/
-    </style>
-    <!--<script src="static/js/bootstrap.min.js"></script>-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--<meta name="apple-mobile-web-app-capable" content="yes">-->
+    <title>You owe me</title>
+    <style type="text/css" media="screen">@import "static/css/apple.css";</style>
+    <script src="static/js/zepto.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="static/js/jqtouch.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="static/js/angular.min.js"></script>
     <script src="static/js/app.js"></script>
+    <style type="text/css" media="screen">
+        .simplebutton {
+            text-align: center;
+        }
+    </style>
+    <script type="text/javascript" charset="utf-8">
+        var jqtouch = $.jQTouch({});
+//        var jqtouch = $.jQTouch({
+//            icon: 'mail.png',
+//            preloadImages: [
+//                'themes/jqt/img/chevron.png',
+//                'themes/jqt/img/back_button.png',
+//                'themes/jqt/img/back_button_clicked.png',
+//                'themes/jqt/img/button_clicked.png',
+//                'themes/jqt/img/grayButton.png',
+//                'themes/jqt/img/whiteButton.png'
+//            ]
+//        });
+        // Add an onload function
+//        $(function(){
+            // Dynamically set next page titles after clicking certain links
+//            $('#home ul a, #mailbox ul a').click(function(){
+//                $( $(this).attr('href') + ' h1' ).html($(this).html());
+//            });
+//        });
+    </script>
 </head>
-<body ng-controller="YouOweApp">
-<div class="container">
-    <div class="row">
-        <div class="col-12">
-            <h3>С тебя причитается</h3>
-            <!--<hr/>-->
-            <form action="" class="form-horizontal">
-                <div class="search">
-                    <span class="glyphicon glyphicon-search"></span>
-                    <input type="search" ng-model="query"/>
-                </div>
-            </form>
-            <!--<hr/>-->
-            <div class="list-group">
-                <div class="list-group-item text-success">
-                    <strong><span class="glyphicon glyphicon-arrow-down"></span> Вам должны</strong>
-                </div>
-                <a href="#" class="list-group-item" ng-repeat="user in oweYou | filter:query">
-                    <span class="badge">{{ user.totalSum }}{{ currency }}</span>
-                    <span class="list-group-item-text">{{ user.email }}</span>
-                </a>
-                <!--<div class="list-group-item">-->
-                    <!--<span class="pull-right">230р.</span>-->
-                    <!--<span class="list-group-item-text">to.merge@gmail.com</span>-->
-                    <!--&lt;!&ndash;<div class="btn-group btn-group-justified">&ndash;&gt;-->
-                        <!--<button class="btn btn-default" href="#">Простить</button>-->
-                        <!--<button class="btn btn-default" href="#">Напомнить</button>-->
-                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                <!--</div>-->
+<body>
+<div id="jqt" ng-controller="AppController">
+    <div id="home">
+        <div class="toolbar">
+            <h1>You owe</h1>
+             <a class="add slideup" href="#add">+</a>
+        </div>
+        <ul class="edgetoedge">
+            <li class="sep">users</li>
+            <li class="arrow" ng-repeat="user in users"><a href="#">{{ user.email }}<small class="counter">{{ user.id }}</small></a></li>
+            <li class="sep">Вам должны</li>
+            <li class="arrow" ng-repeat="user in oweYou"><a href="#">{{ user.email }}<small class="counter">{{ user.totalSum }}{{ currency }}</small></a></li>
+            <li class="sep">Вы задолжали</li>
+            <li class="arrow" ng-repeat="user in youOwe"><a href="#">{{ user.email }}<small class="counter">{{ user.totalSum }}{{ currency }}</small></a></li>
+        </ul>
+    </div>
+    <div id="register">
+        <!--<form ng-controller="RegisterController" name="registerForm" submit-on="registerEvent" ng-submit="register()" action="v1/users" method="post">-->
+        <form ng-controller="RegisterController" name="registerForm" submit-on="registerEvent" ng-submit="register()" action="v1/users" method="post">
+            <div class="toolbar">
+                <h1>You owe</h1>
+                <a class="button" href="#">Войти</a>
             </div>
-            <div class="list-group">
-                <div class="list-group-item text-danger">
-                    <strong><span class="glyphicon glyphicon-arrow-up"></span> Вы задолжали</strong>
-                </div>
-                <a href="#" class="list-group-item" ng-repeat="user in youOwe | filter:query">
-                    <span class="badge">{{ user.totalSum }}{{ currency }}</span>
-                    <span class="list-group-item-text">{{ user.email }}</span>
-                </a>
-            </div>
+            <h2>Регистрация</h2>
+            <ul class="rounded">
+                <li><input ng-model="user.email" required type="email" placeholder="E-mail" value=""></li>
+                <li><input ng-model="user.password" required type="password" value="" placeholder="Пароль"></li>
+                <li><a href="#" ng-click="register()" class="simplebutton">Зарегистрироваться</a></li>
+            </ul>
+        </form>
+    </div>
+    <div id="add">
+        <div class="toolbar">
+            <a class="back button" href="#home">Главная</a>
+            <h1>Я дал в долг</h1>
         </div>
     </div>
 </div>
