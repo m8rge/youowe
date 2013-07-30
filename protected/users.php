@@ -13,7 +13,7 @@ function generatePassword($length = 8) {
 }
 
 $app->get(
-    "/$apiVersion/users",
+    "/$apiVersion/users.json",
     $authenticate(),
     function () use ($app) {
         $users = User::all(array('id', 'email'));
@@ -46,7 +46,7 @@ $app->post(
 );
 
 $app->put(
-    "/$apiVersion/users/:id",
+    "/$apiVersion/users/:id.json",
     $authenticate(),
     $requiredPostFields(array('password')),
     function ($id) use ($app) {

@@ -15,6 +15,17 @@ class User extends Illuminate\Database\Eloquent\Model
 
     public $timestamps = false;
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        User::deleting(
+            function () {
+                return false;
+            }
+        );
+    }
+
     public function setPasswordAttribute($value)
     {
         $this->attributes['hashedPassword'] = $this->hashPassword($value);
