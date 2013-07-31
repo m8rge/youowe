@@ -9,21 +9,23 @@ function ModelsArrayToArrayOfArrays($value) {
 }
 
 $app->get(
-    "/$apiVersion/youowe.json",
+    "/$apiVersion/debts/youowe.json",
     $authenticate(),
     function () use ($app) {
+        /** @var \Illuminate\Database\Eloquent\Collection $youOwe */
         $youOwe = Debt::where('sourceUserId', '=', $_SESSION['user']['id'])->get();
-        $youOwe = array_map('ModelsArrayToArrayOfArrays', $youOwe);
+        $youOwe = array_map('ModelsArrayToArrayOfArrays', $youOwe->toArray());
         echo json_encode($youOwe);
     }
 );
 
 $app->get(
-    "/$apiVersion/oweyou.json",
+    "/$apiVersion/debts/oweyou.json",
     $authenticate(),
     function () use ($app) {
+        /** @var \Illuminate\Database\Eloquent\Collection $IOwe */
         $IOwe = Debt::where('destUserId', '=', $_SESSION['user']['id'])->get();
-        $IOwe = array_map('ModelsArrayToArrayOfArrays', $IOwe);
+        $IOwe = array_map('ModelsArrayToArrayOfArrays', $IOwe->toArray());
         echo json_encode($IOwe);
     }
 );

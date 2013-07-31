@@ -41,15 +41,16 @@
 <div id="jqt" ng-controller="AppController">
     <div id="home">
         <div class="toolbar">
+            <!--<a class="leftButton button" href="#" ng-show="authorized" ng-click="logout()">Выйти</a>-->
             <h1>You owe</h1>
-             <a class="add slideup" href="#add">+</a>
+            <a class="add slideup" href="#add">+</a>
         </div>
         <ul class="edgetoedge">
-            <li class="sep">users</li>
+            <li class="sep" ng-show="users">users</li>
             <li class="arrow" ng-repeat="user in users"><a href="#">{{ user.email }}<small class="counter">{{ user.id }}</small></a></li>
-            <li class="sep">Вам должны</li>
+            <li class="sep" ng-show="oweYou">Вам должны</li>
             <li class="arrow" ng-repeat="user in oweYou"><a href="#">{{ user.email }}<small class="counter">{{ user.totalSum }}{{ currency }}</small></a></li>
-            <li class="sep">Вы задолжали</li>
+            <li class="sep" ng-show="youOwe">Вы задолжали</li>
             <li class="arrow" ng-repeat="user in youOwe"><a href="#">{{ user.email }}<small class="counter">{{ user.totalSum }}{{ currency }}</small></a></li>
         </ul>
     </div>
@@ -58,7 +59,7 @@
         <form ng-controller="RegisterController" name="registerForm" submit-on="registerEvent" ng-submit="register()" action="v1/users" method="post">
             <div class="toolbar">
                 <h1>You owe</h1>
-                <a class="button" href="#">Войти</a>
+                <a class="button" href="#" ng-click="login()">Войти</a>
             </div>
             <h2>Регистрация</h2>
             <ul class="rounded">

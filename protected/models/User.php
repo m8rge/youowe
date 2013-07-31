@@ -12,6 +12,7 @@
 class User extends Illuminate\Database\Eloquent\Model
 {
     protected $fillable = array('email', 'password');
+    protected $hidden = array('hashedPassword');
 
     public $timestamps = false;
 
