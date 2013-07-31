@@ -9,7 +9,6 @@ app.controller("AppController", function($scope, $http) {
             $scope.authorized = true;
             $scope.users = data;
         }).error(function () {
-            $scope.$emit('authFailed');
             jqtouch.goTo('#register');
             $scope.authorized = false;
         });
@@ -37,9 +36,11 @@ app.controller("AppController", function($scope, $http) {
     }
 
     $scope.logout = function () {
-        $http.post('http://1@youowe.localhost:8080/v1/logout').success(function() {
-            $scope.$emit('logout');
+        $scope.$emit('logout');
+        $http.post('http://::@youowe.localhost:8080/v1/logout').success(function() {
             $scope.$emit('tryLogin');
+        }).error(function () {
+            jqtouch.goTo('#register');
         });
     }
 });
