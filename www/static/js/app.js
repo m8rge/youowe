@@ -25,27 +25,23 @@ app.controller("AppController", function($scope, $http) {
     };
 
     $scope.$on('tryLogin', loadData);
-//    $scope.$on('logout', function () {
-//        $scope.authorized = false;
-//        $scope.users = [];
-//        $scope.oweYou = [];
-//        $scope.youOwe = [];
-//    });
+    $scope.$on('logout', function () {
+        $scope.authorized = false;
+        $scope.users = [];
+        $scope.oweYou = [];
+        $scope.youOwe = [];
+    });
 
     if (window.location.hash != '#register') {
         loadData();
     }
 
-//    $scope.logout = function () {
-//        $http.post('http://1:1@youowe.localhost:8080/v1/logout').success(function() {
-//        }).error(function() {
-//                $http.post('http://1:1@youowe.localhost:8080/v1/logout').success(function() {
-//                }).error(function() {
-//                        $scope.$emit('logout');
-//                        $scope.$emit('tryLogin');
-//                    });
-//            });
-//    }
+    $scope.logout = function () {
+        $http.post('http://1@youowe.localhost:8080/v1/logout').success(function() {
+            $scope.$emit('logout');
+            $scope.$emit('tryLogin');
+        });
+    }
 });
 
 app.controller("RegisterController", function($scope, $http) {

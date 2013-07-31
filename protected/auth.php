@@ -11,7 +11,6 @@ $app->post(
 $app->post(
     "/$apiVersion/logout",
     $authenticate(),
-    $requiredPostFields(array('hash')),
     function () use ($app, $params) {
         unset($_SESSION['user']);
         $app->status(204);

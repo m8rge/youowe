@@ -36,6 +36,7 @@ $authenticate = function() use ($app) {
             }
             $user = User::where('email', '=', $username)->first();
             if (empty($user) || !password_verify($password, $user['hashedPassword'])) {
+                $app->response()->header('WWW-Authenticate', 'Basic realm="You must authenticate"');
                 throw new UserException('Invalid login', 401);
             }
             $_SESSION['user']['id'] = $user['id'];
