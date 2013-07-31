@@ -1,6 +1,6 @@
 var app = angular.module("YouOweApp", []);
 
-app.controller("AppController", function($scope, $http) {
+app.controller("AppController", function($scope, $http, $location) {
     $scope.currency = 'р.';
 
     var loadData = function () {
@@ -37,7 +37,7 @@ app.controller("AppController", function($scope, $http) {
 
     $scope.logout = function () {
         $scope.$emit('logout');
-        $http.post('http://::@youowe.localhost:8080/v1/logout').success(function() {
+        $http.post($location.protocol() + '://::@'+$location.host()+':'+$location.port()+'/v1/logout').success(function() {
             $scope.$emit('tryLogin');
         }).error(function () {
             jqtouch.goTo('#register');
