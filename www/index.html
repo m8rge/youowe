@@ -38,25 +38,24 @@
     </script>
 </head>
 <body>
-<div id="jqt" ng-controller="AppController">
-    <div id="home">
+<div id="jqt">
+    <div id="home" ng-controller="AppController">
         <div class="toolbar">
-            <a class="leftButton button" href="#" ng-show="authorized" ng-click="logout()">Выйти</a>
+            <a class="leftButton button" href="#" ng-show="user.loggedIn" ng-click="logout()">Выйти</a>
             <h1>You owe</h1>
             <a class="add slideup" href="#add">+</a>
         </div>
         <ul class="edgetoedge">
-            <li class="sep" ng-show="users">users</li>
-            <li class="arrow" ng-repeat="user in users"><a href="#">{{ user.email }}<small class="counter">{{ user.id }}</small></a></li>
-            <li class="sep" ng-show="oweYou">Вам должны</li>
-            <li class="arrow" ng-repeat="user in oweYou"><a href="#">{{ user.email }}<small class="counter">{{ user.totalSum }}{{ currency }}</small></a></li>
-            <li class="sep" ng-show="youOwe">Вы задолжали</li>
-            <li class="arrow" ng-repeat="user in youOwe"><a href="#">{{ user.email }}<small class="counter">{{ user.totalSum }}{{ currency }}</small></a></li>
+            <li class="sep" ng-show="user.users">users</li>
+            <li class="arrow" ng-repeat="user in user.users"><a href="#">{{ user.email }}<small class="counter">{{ user.id }}</small></a></li>
+            <li class="sep" ng-show="user.oweYou">Вам должны</li>
+            <li class="arrow" ng-repeat="user in user.oweYou"><a href="#">{{ user.email }}<small class="counter">{{ user.totalSum }}{{ currency }}</small></a></li>
+            <li class="sep" ng-show="user.youOwe">Вы задолжали</li>
+            <li class="arrow" ng-repeat="user in user.youOwe"><a href="#">{{ user.email }}<small class="counter">{{ user.totalSum }}{{ currency }}</small></a></li>
         </ul>
     </div>
-    <div id="register">
-        <!--<form ng-controller="RegisterController" name="registerForm" submit-on="registerEvent" ng-submit="register()" action="v1/users" method="post">-->
-        <form ng-controller="RegisterController" name="registerForm" submit-on="registerEvent" ng-submit="register()" action="v1/users" method="post">
+    <div id="register" ng-controller="RegisterController">
+        <form>
             <div class="toolbar">
                 <h1>You owe</h1>
                 <a class="button" href="#" ng-click="login()">Войти</a>
