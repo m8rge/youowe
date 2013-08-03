@@ -11,10 +11,56 @@
     <script src="static/js/angular.min.js"></script>
     <script src="static/js/app.js"></script>
     <style type="text/css" media="screen">
-        .simplebutton {
-            text-align: center;
+        #jqt ul li input[type='submit'] {
+            box-sizing: content-box;
+            font-family: 'Helvetica Neue', Helvetica;
+            width: 100%;
+            border-radius: 0 0 6px 6px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            -webkit-appearance: none;
+            -webkit-border-radius: 0;
+            overflow: hidden;
+            padding: 10px;
+            margin: -10px;
+            -webkit-tap-highlight-color: transparent;
         }
-    </style>
+
+        #jqt ul li input[type='submit']:active {
+            background: #3366cc;
+            -webkit-box-shadow: #4372d0 0 1px 0px inset;
+            padding: 10px;
+            margin: -10px;
+            box-shadow: #4372d0 0 1px 0px inset;
+            color: white;
+            text-shadow: #2952a3 0 -1px 0;
+        }
+
+        #jqt ul.rounded li.fullfill {
+            padding: 0;
+            overflow: visible;
+        }
+
+        #jqt ul.rounded li.fullfill input {
+            padding: 10px;
+            box-sizing: border-box;
+            outline: none;
+            border-radius: 0;
+        }
+
+        #jqt ul.rounded li.fullfill:first-child input {
+            border-radius: 6px 6px 0 0;
+        }
+
+        #jqt ul li:last-child input[type='submit'] {
+            border-radius: 0 0 6px 6px;
+        }
+
+        #jqt ul li input.ng-dirty.ng-invalid {
+            box-shadow: 0 0 6px #D31F1C;
+        }
+        </style>
     <script type="text/javascript" charset="utf-8">
         var jqtouch = $.jQTouch({});
 //        var jqtouch = $.jQTouch({
@@ -27,13 +73,6 @@
 //                'themes/jqt/img/grayButton.png',
 //                'themes/jqt/img/whiteButton.png'
 //            ]
-//        });
-        // Add an onload function
-//        $(function(){
-            // Dynamically set next page titles after clicking certain links
-//            $('#home ul a, #mailbox ul a').click(function(){
-//                $( $(this).attr('href') + ' h1' ).html($(this).html());
-//            });
 //        });
     </script>
 </head>
@@ -55,16 +94,16 @@
         </ul>
     </div>
     <div id="register" ng-controller="RegisterController">
-        <form>
+        <form name="RegisterForm" ng-submit="register()">
             <div class="toolbar">
                 <h1>You owe</h1>
                 <a class="button" href="#" ng-click="login()">Войти</a>
             </div>
             <h2>Регистрация</h2>
             <ul class="rounded">
-                <li><input ng-model="user.email" required type="email" placeholder="E-mail" value=""></li>
-                <li><input ng-model="user.password" required type="password" value="" placeholder="Пароль"></li>
-                <li><a href="#" ng-click="register()" class="simplebutton">Зарегистрироваться</a></li>
+                <li class="fullfill"><input ng-model="user.email" required type="email" placeholder="E-mail" value=""></li>
+                <li class="fullfill"><input ng-model="user.password" required type="password" value="" placeholder="Пароль"></li>
+                <li><input type="submit" value="Зарегистрироваться"/></li>
             </ul>
         </form>
     </div>

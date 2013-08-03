@@ -58,20 +58,27 @@ app.controller("AppController", function ($scope, $http, $window, User) {
 });
 
 app.controller("RegisterController", function ($scope, $http, $location, User) {
-    /*
-     $scope.register = function () {
-     $http.post('v1/users', $scope.user).success(function (data, status) {
-     if (status == 201) {
-     alert('success!');
-     } else {
-     alert('error');
-     }
-     });
-     };
-     */
+    $scope.register = function () {
+        if (!$scope.RegisterForm.$valid) {
+            alert('Пожалуйста исправьте ошибки и попробуйте зарегистрироваться заново');
+        } else {
+            $http.post('v1/users', $scope.user).success(function (data, status) {
+                if (status == 201) {
+                    alert('Теперь Вы можете войти под своими реквизитами');
+                } else {
+                    alert('error: '. data);
+                }
+            });
+        }
+    };
 
     $scope.$on('loginFail', function () {
         jqtouch.goTo('#register');
+        $scope.RegisterForm.$setPristine();
+        if ($scope.user) {
+            $scope.user.email = '';
+            $scope.user.password = '';
+        }
     });
 
     $scope.$on('loginSuccess', function () {
