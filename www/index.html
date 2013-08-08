@@ -5,62 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!--<meta name="apple-mobile-web-app-capable" content="yes">-->
     <title>You owe me</title>
-    <style type="text/css" media="screen">@import "static/css/apple.css";</style>
+    <style type="text/css" media="screen">
+        @import "static/css/apple.css";
+        @import "static/css/my.css";
+    </style>
     <script src="static/js/zepto.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="static/js/jqtouch.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="static/js/angular.min.js"></script>
     <script src="static/js/app.js"></script>
-    <style type="text/css" media="screen">
-        #jqt ul li input[type='submit'] {
-            box-sizing: content-box;
-            font-family: 'Helvetica Neue', Helvetica;
-            width: 100%;
-            border-radius: 0 0 6px 6px;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            -webkit-appearance: none;
-            -webkit-border-radius: 0;
-            overflow: hidden;
-            padding: 10px;
-            margin: -10px;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        #jqt ul li input[type='submit']:active {
-            background: #3366cc;
-            -webkit-box-shadow: #4372d0 0 1px 0px inset;
-            padding: 10px;
-            margin: -10px;
-            box-shadow: #4372d0 0 1px 0px inset;
-            color: white;
-            text-shadow: #2952a3 0 -1px 0;
-        }
-
-        #jqt ul.rounded li.fullfill {
-            padding: 0;
-            overflow: visible;
-        }
-
-        #jqt ul.rounded li.fullfill input {
-            padding: 10px;
-            box-sizing: border-box;
-            outline: none;
-            border-radius: 0;
-        }
-
-        #jqt ul.rounded li.fullfill:first-child input {
-            border-radius: 6px 6px 0 0;
-        }
-
-        #jqt ul li:last-child input[type='submit'] {
-            border-radius: 0 0 6px 6px;
-        }
-
-        #jqt ul li input.ng-dirty.ng-invalid {
-            box-shadow: 0 0 6px #D31F1C;
-        }
-        </style>
     <script type="text/javascript" charset="utf-8">
         var jqtouch = $.jQTouch({});
 //        var jqtouch = $.jQTouch({
@@ -80,25 +32,26 @@
 <div id="jqt">
     <div id="home" ng-controller="AppController">
         <div class="toolbar">
-            <a class="leftButton button" href="#" ng-show="user.loggedIn" ng-click="logout()">Выйти</a>
+            <a class="leftButton button" href="#" ng-show="user.loggedIn" ng-click="user.logout()">Выйти</a>
             <h1>You owe</h1>
             <a class="add slideup" href="#add">+</a>
         </div>
-        <ul class="edgetoedge">
-            <li class="sep" ng-show="user.users">users</li>
-            <li class="arrow" ng-repeat="user in user.users"><a href="#">{{ user.email }}<small class="counter">{{ user.id }}</small></a></li>
-            <li class="sep" ng-show="user.oweYou">Вам должны</li>
-            <li class="arrow" ng-repeat="user in user.oweYou"><a href="#">{{ user.email }}<small class="counter">{{ user.totalSum }}{{ currency }}</small></a></li>
-            <li class="sep" ng-show="user.youOwe">Вы задолжали</li>
-            <li class="arrow" ng-repeat="user in user.youOwe"><a href="#">{{ user.email }}<small class="counter">{{ user.totalSum }}{{ currency }}</small></a></li>
+        <ul class="edgetoedge scroll touchscroll">
+            <li class="sep">Вам должны</li>
+            <li class="arrow" ng-repeat="user in user.oweYou"><a href="#">{{ user.email }}<small class="counter">{{ user.totalSum }}{{ settings.currency }}</small></a></li>
+            <li ng-hide="user.oweYou">Вам никто не должен</li>
+            <li class="sep">Вы задолжали</li>
+            <li class="arrow" ng-repeat="user in user.youOwe"><a href="#">{{ user.email }}<small class="counter">{{ user.totalSum }}{{ settings.currency }}</small></a></li>
+            <li ng-hide="user.youOwe">Вы перед всеми чисты</li>
         </ul>
+        <!--<a href="#add" class="whiteButton slideup">Я дал в долг</a>-->
     </div>
     <div id="register" ng-controller="RegisterController">
-        <form name="RegisterForm" ng-submit="register()">
-            <div class="toolbar">
-                <h1>You owe</h1>
-                <a class="button" href="#" ng-click="login()">Войти</a>
-            </div>
+        <div class="toolbar">
+            <h1>You owe</h1>
+            <a class="button" href="#" ng-click="user.login()">Войти</a>
+        </div>
+        <form name="RegisterForm" ng-submit="register()" class="singleForm">
             <h2>Регистрация</h2>
             <ul class="rounded">
                 <li class="fullfill"><input ng-model="user.email" required type="email" placeholder="E-mail" value=""></li>
@@ -107,11 +60,23 @@
             </ul>
         </form>
     </div>
-    <div id="add">
+    <div id="add" ng-controller="AddDebtController">
         <div class="toolbar">
             <a class="back button" href="#home">Главная</a>
             <h1>Я дал в долг</h1>
         </div>
+        <form name="AddDebtForm" ng-submit="addDebt()">
+            <ul class="rounded">
+                <li class="fullfill">
+                    <select name="add.emailSelect">
+                        <option value="{{ user.email }}" ng-repeat="user in users">{{ user.email }}</option>
+                    </select>
+                </li>
+                <!--<li class="fullfill"><input ng-model="user.email" required type="email" placeholder="E-mail" value=""></li>-->
+                <li class="fullfill"><input ng-model="user.password" required type="number" value="" placeholder="Сумма, {{ settings.currency }}"></li>
+                <li><input type="submit" value="Добавить должника"/></li>
+            </ul>
+        </form>
     </div>
 </div>
 </body>
