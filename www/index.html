@@ -2,82 +2,23 @@
 <html lang="ru" ng-app="YouOweApp">
 <head>
     <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!--<meta name="apple-mobile-web-app-capable" content="yes">-->
-    <title>You owe me</title>
-    <style type="text/css" media="screen">
-        @import "static/css/apple.css";
-        @import "static/css/my.css";
-    </style>
-    <script src="static/js/zepto.min.js" type="text/javascript" charset="utf-8"></script>
-    <script src="static/js/jqtouch.min.js" type="text/javascript" charset="utf-8"></script>
+    <meta name="apple-mobile-web-app-title" content="You owe">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>С тебя причитается</title>
+    <link rel="stylesheet" href="static/css/style.css" media="screen"/>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.3/angular.min.js"></script>-->
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.3/angular-route.min.js"></script>-->
+    <!--<script src="static/js/zepto.min.js"></script>-->
+    <!--<script src="static/js/fastclick.min.js"></script>-->
+    <!--<script src="static/js/ios.js"></script>-->
     <script src="static/js/angular.min.js"></script>
+    <script src="static/js/angular-route.min.js"></script>
     <script src="static/js/app.js"></script>
-    <script type="text/javascript" charset="utf-8">
-        var jqtouch = $.jQTouch({});
-//        var jqtouch = $.jQTouch({
-//            icon: 'mail.png',
-//            preloadImages: [
-//                'themes/jqt/img/chevron.png',
-//                'themes/jqt/img/back_button.png',
-//                'themes/jqt/img/back_button_clicked.png',
-//                'themes/jqt/img/button_clicked.png',
-//                'themes/jqt/img/grayButton.png',
-//                'themes/jqt/img/whiteButton.png'
-//            ]
-//        });
-    </script>
 </head>
-<body>
-<div id="jqt">
-    <div id="home" ng-controller="AppController">
-        <div class="toolbar">
-            <a class="leftButton button" href="#" ng-show="user.loggedIn" ng-click="user.logout()">Выйти</a>
-            <h1>You owe</h1>
-            <a class="add slideup" href="#add">+</a>
-        </div>
-        <ul class="edgetoedge scroll touchscroll">
-            <li class="sep">Вам должны</li>
-            <li class="arrow" ng-repeat="user in user.oweYou"><a href="#">{{ user.email }}<small class="counter">{{ user.totalSum }}{{ settings.currency }}</small></a></li>
-            <li ng-hide="user.oweYou">Вам никто не должен</li>
-            <li class="sep">Вы задолжали</li>
-            <li class="arrow" ng-repeat="user in user.youOwe"><a href="#">{{ user.email }}<small class="counter">{{ user.totalSum }}{{ settings.currency }}</small></a></li>
-            <li ng-hide="user.youOwe">Вы перед всеми чисты</li>
-        </ul>
-        <!--<a href="#add" class="whiteButton slideup">Я дал в долг</a>-->
-    </div>
-    <div id="register" ng-controller="RegisterController">
-        <div class="toolbar">
-            <h1>You owe</h1>
-            <a class="button" href="#" ng-click="user.login()">Войти</a>
-        </div>
-        <form name="RegisterForm" ng-submit="register()" class="singleForm">
-            <h2>Регистрация</h2>
-            <ul class="rounded">
-                <li class="fullfill"><input ng-model="user.email" required type="email" placeholder="E-mail" value=""></li>
-                <li class="fullfill"><input ng-model="user.password" required type="password" value="" placeholder="Пароль"></li>
-                <li><input type="submit" value="Зарегистрироваться"/></li>
-            </ul>
-        </form>
-    </div>
-    <div id="add" ng-controller="AddDebtController">
-        <div class="toolbar">
-            <a class="back button" href="#home">Главная</a>
-            <h1>Я дал в долг</h1>
-        </div>
-        <form name="AddDebtForm" ng-submit="addDebt()">
-            <ul class="rounded">
-                <li class="fullfill">
-                    <select name="add.emailSelect">
-                        <option value="{{ user.email }}" ng-repeat="user in users">{{ user.email }}</option>
-                    </select>
-                </li>
-                <!--<li class="fullfill"><input ng-model="user.email" required type="email" placeholder="E-mail" value=""></li>-->
-                <li class="fullfill"><input ng-model="user.password" required type="number" value="" placeholder="Сумма, {{ settings.currency }}"></li>
-                <li><input type="submit" value="Добавить должника"/></li>
-            </ul>
-        </form>
-    </div>
-</div>
+<body class="ios7">
+
+<div ng-view></div>
+
 </body>
 </html>

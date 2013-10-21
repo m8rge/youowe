@@ -1,4 +1,23 @@
-var app = angular.module("YouOweApp", []);
+var app = angular.module("YouOweApp", ['ngRoute']);
+
+app.config(function ($routeProvider) {
+    $routeProvider.
+        when('/', {
+            templateUrl: 'partials/main.html',
+            controller: 'AppController'
+        }).
+        when('/register', {
+            templateUrl: 'partials/register.html',
+            controller: 'RegisterController'
+        }).
+        when('/add', {
+            templateUrl: 'partials/add.html',
+            controller: 'AddDebtController'
+        }).
+        otherwise({
+            redirectTo: '/'
+        });
+});
 
 app.factory('Settings', function(){
     return {
@@ -6,28 +25,28 @@ app.factory('Settings', function(){
     }
 });
 
-app.factory('Users', function($http, $rootScope) {
+app.factory('Users', function($http, $rootScope, $location) {
     var users = {
         list: []
     };
 
-    $rootScope.$on('login', function () {
-        $http.get('v1/users.json').success(function (data) {
-            $rootScope.$broadcast('loginSuccess');
+    users.loadData = function(successCallback) {
+        $http.get('/v1/users.json').success(function (data) {
             users.list = data;
+            successCallback();
         }).error(function () {
-            $rootScope.$broadcast('loginFail');
+            $location.path('/register');
         });
-    });
+    };
 
-    $rootScope.$on('logout', function () {
+    users.clearData = function() {
         users.list = [];
-    });
+    };
 
     return users;
 });
 
-app.factory('User', function ($http, $rootScope, $location) {
+app.factory('User', function ($http, $rootScope, $location, Users) {
     var user = {
         loggedIn: false,
         oweYou: [],
@@ -35,21 +54,20 @@ app.factory('User', function ($http, $rootScope, $location) {
     };
 
     user.login = function () {
-        $rootScope.$broadcast('login');
+        Users.loadData(function() {
+            user.loggedIn = true;
+            $http.get('/v1/debts/oweyou.json').success(function (data) {
+                user.oweYou = data;
+            });
+            $http.get('/v1/debts/youowe.json').success(function (data) {
+                user.youOwe = data;
+            });
+            $location.path('/');
+        });
     };
 
-    $rootScope.$on('loginSuccess', function() {
-        user.loggedIn = true;
-        $http.get('v1/debts/oweyou.json').success(function (data) {
-            user.oweYou = data;
-        });
-        $http.get('v1/debts/youowe.json').success(function (data) {
-            user.youOwe = data;
-        });
-    });
-
     user.logout = function () {
-        $rootScope.$broadcast('logout');
+        Users.clearData();
         this.loggedIn = false;
         this.oweYou = [];
         this.youOwe = [];
@@ -57,7 +75,7 @@ app.factory('User', function ($http, $rootScope, $location) {
         $http.post($location.protocol() + '://::@' + $location.host() + ':' + $location.port() + '/v1/logout').success(function () {
             user.login();
         }).error(function () {
-            $rootScope.$broadcast('loginFail');
+            $location.path('/register');
         });
     };
 
@@ -67,21 +85,21 @@ app.factory('User', function ($http, $rootScope, $location) {
 /****************
  * CONTROLLERS
  */
-app.controller("AppController", function ($scope, $window, Users, User, Settings) {
+app.controller("AppController", function ($scope, $window, $location, Users, User, Settings) {
     $scope.settings = Settings;
     $scope.user = User;
     $scope.users = Users;
 
-    if ($window.location.hash != '#register') {
+    if ($location.path() != '/register') {
         User.login();
     }
 });
 
-app.controller("RegisterController", function ($scope, $http, User) {
+app.controller("RegisterController", function ($scope, $http, $location, User) {
     $scope.user = User;
 
     $scope.register = function () {
-        if (!$scope.RegisterForm.$valid) {
+        if (!$scope.registerForm.$valid) {
             alert('Пожалуйста исправьте ошибки и попробуйте зарегистрироваться заново');
         } else {
             $http.post('v1/users', $scope.user).success(function (data, status) {
@@ -93,29 +111,17 @@ app.controller("RegisterController", function ($scope, $http, User) {
             });
         }
     };
-
-    $scope.$on('loginFail', function () {
-        jqtouch.goTo('#register');
-        $scope.RegisterForm.$setPristine();
-        if ($scope.user) {
-            $scope.user.email = '';
-            $scope.user.password = '';
-        }
-    });
-
-    $scope.$on('loginSuccess', function () {
-        jqtouch.goTo('#home');
-    });
 });
 
-app.controller("AddDebtController", function($scope, Settings) {
-   $scope.settings = Settings;
+app.controller("AddDebtController", function($scope, $http, $location, Settings, Users) {
+    $scope.settings = Settings;
+    $scope.users = Users;
 
     $scope.addDebt = function () {
         if (!$scope.AddDebtForm.$valid) {
             alert('Пожалуйста исправьте ошибки и попробуйте заново');
         } else {
-            $http.post('v1/users', $scope.user).success(function (data, status) {
+            $http.post('v1/debt', $scope.addDebt).success(function (data, status) {
                 if (status == 201) {
                     alert('Теперь Вы можете войти под своими реквизитами');
                 } else {

@@ -1,0 +1,29 @@
+<section>
+    <header>
+        <a class="left arrow" href="#/">Главная</a>
+        <h1>You owe</h1>
+    </header>
+    <div class="scrollMask"></div>
+    <div class="scrollWrap">
+        <div class="scroll">
+            <div class="content">
+                <form name="AddDebtForm" ng-submit="addDebt()">
+                    <ul>
+                        <li ng-hide="addDebt.destUserId == 'addNew'">
+                            <select ng-model="addDebt.destUserId">
+                                <option value="">Выберите должника</option>
+                                <optgroup label="Существующие">
+                                    <option value="{{ user.id }}" ng-repeat="user in users.list">{{ user.email }}</option>
+                                </optgroup>
+                                <option value="addNew">Добавить нового</option>
+                            </select>
+                        </li>
+                        <li ng-show="addDebt.destUserId == 'addNew'"><input ng-model="addDebt.email" required type="email" placeholder="E-mail" value=""></li>
+                        <li><input ng-model="addDebt.password" required type="number" value="" placeholder="Сумма, {{ settings.currency }}"></li>
+                        <li><input type="submit" value="Добавить должника"/></li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
