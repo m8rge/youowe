@@ -62,7 +62,7 @@ app.factory('User', function ($http, $rootScope, $location, Users) {
             $http.get('/v1/debts/youowe.json').success(function (data) {
                 user.youOwe = data;
             });
-            $location.path('/');
+            $rootScope.$broadcast('loginSuccess');
         });
     };
 
@@ -90,7 +90,7 @@ app.controller("AppController", function ($scope, $window, $location, Users, Use
     $scope.user = User;
     $scope.users = Users;
 
-    if ($location.path() != '/register') {
+    if (!User.loggedIn) {
         User.login();
     }
 });
@@ -111,9 +111,17 @@ app.controller("RegisterController", function ($scope, $http, $location, User) {
             });
         }
     };
+
+    $scope.$on('loginSuccess', function() {
+        $location.path('/');
+    });
 });
 
-app.controller("AddDebtController", function($scope, $http, $location, Settings, Users) {
+app.controller("AddDebtController", function($scope, $http, $location, Settings, User, Users) {
+    if (!User.loggedIn) {
+        User.login();
+    }
+
     $scope.settings = Settings;
     $scope.users = Users;
 

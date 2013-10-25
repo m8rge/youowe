@@ -1,6 +1,6 @@
 {
     "require": {
-        "slim/slim": "2.*",
+        "slim/slim": "2.2",
         "illuminate/database": "v4.0.5",
         "ircmaxell/password-compat": "1.0.3",
         "m8rge/alternative-mail": "dev-master"

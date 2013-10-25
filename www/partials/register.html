@@ -3,19 +3,22 @@
         <h1>You owe</h1>
         <button class="right bold" ng-click="user.login()">Войти</button>
     </header>
-    <!--<div class="scrollMask"></div>-->
-    <!--<div class="scrollWrap">-->
-        <div class="scroll">
-            <div class="content">
-                <form name="registerForm" ng-submit="register()">
-                    <h2>Регистрация</h2>
-                    <ul class="rounded">
+    <div class="scroll">
+        <div class="content">
+            <form name="registerForm" ng-submit="register()">
+                <h2>Регистрация</h2>
+                <ul>
+                    <li>
                         <input ng-model="user.email" required type="email" placeholder="E-mail" value="">
+                    </li>
+                    <li>
                         <input ng-model="user.password" required type="password" value="" placeholder="Пароль">
+                    </li>
+                    <li>
                         <input type="submit" value="Зарегистрироваться"/>
-                    </ul>
-                </form>
-            </div>
+                    </li>
+                </ul>
+            </form>
         </div>
-    <!--</div>-->
+    </div>
 </section>

@@ -1,15 +1,14 @@
 <section>
     <header>
-        <button class="left" ng-show="user.loggedIn" ng-click="user.logout()"><div class="label">Выйти</div></button>
+        <button class="left" ng-show="user.loggedIn" ng-click="user.logout()">Выйти</button>
         <h1>You owe</h1>
         <a class="right bold" href="#/add">Добавить</a>
     </header>
-    <div class="scrollMask"></div>
     <div class="scrollWrap">
         <div class="scroll">
             <div class="content">
+                <h2>Вам должны</h2>
                 <ul class="arrowed">
-                    <li class="sep">Вам должны</li>
                     <li ng-repeat="user in user.oweYou">
                         <div class="innerLi">
                             <div class="big">{{ user.email }}</div>
@@ -17,7 +16,9 @@
                         </div>
                     </li>
                     <li ng-hide="user.oweYou">Вам никто не должен</li>
-                    <li class="sep">Вы задолжали</li>
+                </ul>
+                <h2>Вы задолжали</h2>
+                <ul class="arrowed">
                     <li ng-repeat="user in user.youOwe">
                         <div class="innerLi">
                             <div class="big">{{ user.email }}</div>
