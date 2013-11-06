@@ -1,5 +1,20 @@
 var app = angular.module("YouOweApp", ['ngRoute']);
 
+app.directive('focusOn', function($timeout) {
+    return {
+        restrict: "A",
+        link: function(scope, element, attrs) {
+            scope.$watch(attrs.focusOn, function(value) {
+                if(value === true) {
+                    $timeout(function() {
+                        element[0].focus();
+                    });
+                }
+            });
+        }
+    };
+});
+
 app.config(function ($routeProvider) {
     $routeProvider.
         when('/', {

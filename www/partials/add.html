@@ -10,7 +10,7 @@
                 <form name="AddDebtForm" ng-submit="addDebt()">
                     <ul>
                         <li ng-hide="addDebt.destUserId == 'addNew'">
-                            <select ng-model="addDebt.destUserId">
+                            <select ng-model="addDebt.destUserId" focus-on="addDebt.destUserId != 'addNew'">
                                 <option value="">Выберите должника</option>
                                 <optgroup label="Существующие">
                                     <option value="{{ user.id }}" ng-repeat="user in users.list">{{ user.email }}</option>
@@ -18,7 +18,9 @@
                                 <option value="addNew">Добавить нового</option>
                             </select>
                         </li>
-                        <li ng-show="addDebt.destUserId == 'addNew'"><input ng-model="addDebt.email" required type="email" placeholder="E-mail" value=""></li>
+                        <li ng-show="addDebt.destUserId == 'addNew'">
+                            <input ng-model="addDebt.email" focus-on="addDebt.destUserId == 'addNew'" required type="email" placeholder="E-mail" value="">
+                        </li>
                         <li><input ng-model="addDebt.password" required type="number" value="" placeholder="Сумма, {{ settings.currency }}"></li>
                         <li><input type="submit" value="Добавить должника"/></li>
                     </ul>
