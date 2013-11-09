@@ -4,8 +4,14 @@ $app->get(
     "/$apiVersion/users.json",
     $authenticate(),
     function () use ($app) {
-        $users = User::all(array('id', 'email'));
-        echo $users->toJson();
+        $users = User::where('id', '!=', $_SESSION['user']['id'])->get(array('id', 'email'));
+        $result = array();
+        /** @var User $user */
+        foreach ($users as $user) {
+            $result[ $user->id ] = $user->toArray();
+        }
+
+        echo json_encode($result);
     }
 );
 

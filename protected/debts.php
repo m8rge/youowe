@@ -13,7 +13,7 @@ $app->get(
     $authenticate(),
     function () use ($app) {
         /** @var \Illuminate\Database\Eloquent\Collection $youOwe */
-        $youOwe = Debt::where('sourceUserId', '=', $_SESSION['user']['id'])->get();
+        $youOwe = Debt::where('destUserId', '=', $_SESSION['user']['id'])->get();
         $youOwe = array_map('ModelsArrayToArrayOfArrays', $youOwe->toArray());
         echo json_encode($youOwe);
     }
@@ -24,7 +24,7 @@ $app->get(
     $authenticate(),
     function () use ($app) {
         /** @var \Illuminate\Database\Eloquent\Collection $IOwe */
-        $IOwe = Debt::where('destUserId', '=', $_SESSION['user']['id'])->get();
+        $IOwe = Debt::where('sourceUserId', '=', $_SESSION['user']['id'])->get();
         $IOwe = array_map('ModelsArrayToArrayOfArrays', $IOwe->toArray());
         echo json_encode($IOwe);
     }
@@ -33,15 +33,34 @@ $app->get(
 $app->post(
     "/$apiVersion/debts",
     $authenticate(),
-    $requiredPostFields(array('destUserId', 'sum')),
-    function () use ($app) {
+    $requiredPostFields(array('sum')),
+    function () use ($app, $params) {
+        if (empty($_POST['destUserId']) && empty($_POST['email'])) {
+            throw new UserException('Wrong debt recipient');
+        }
+
+        if (!empty($_POST['email'])) {
+            if (User::where('email', '=', $_POST['email'])->count()) {
+                throw new UserException('email already exists');
+            }
+            /** @var User $destUser */
+            $destUser = User::create(
+                array(
+                    'email' => $_POST['email'],
+                    'password' => mcrypt_create_iv(12, MCRYPT_DEV_URANDOM),
+                )
+            );
+        } else {
+            $destUser = User::findOrFail($_POST['destUserId']);
+        }
         $debt = Debt::create(
             array(
                 'sourceUserId' => $_SESSION['user']['id'],
-                'destUserId' => $_POST['destUserId'],
+                'destUserId' => $destUser->id,
                 'sum' => $_POST['sum'],
             )
         );
+
         $app->status(201);
         echo $debt->toJson();
     }

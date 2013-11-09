@@ -8,135 +8,135 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
     font-size: 100%;
     font-family: inherit;
     vertical-align: baseline;
-} 
+}
 button {
-	background: transparent; /* Fix for Chrome and Firefox OS */
+    background: transparent; /* Fix for Chrome and Firefox OS */
 }
 :focus {
     outline: 0;
-} 
+}
 ol, ul {
     list-style: none;
-} 
+}
 table {
     border-collapse: separate;
     border-spacing: 0;
-} 
+}
 caption, th, td {
     text-align: left;
     font-weight: normal;
-} 
+}
 blockquote:before, blockquote:after, q:before, q:after {
     content: "";
-} 
+}
 blockquote, q {
     quotes: "" "";
-} 
+}
 
 html, body {
-	overflow: hidden;
+    overflow: hidden;
 }
 
 body {
-	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-	text-rendering: optimizeLegibility;
-	-webkit-font-smoothing: antialiased;
-	font-size: 18px;
-	margin: 0;
-	padding: 0;
-	overflow: hidden;
-	position: relative;
-	word-wrap: break-word;
-	-webkit-text-size-adjust: none;
-	        text-size-adjust: none;
-	height: 100%;
-	font-weight: 300;
-	line-height: 1;
-	color: rgb(0, 0, 0);
-	background-color: rgb(255, 255, 255);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    font-size: 18px;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    position: relative;
+    word-wrap: break-word;
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
+    height: 100%;
+    font-weight: 300;
+    line-height: 1;
+    color: rgb(0, 0, 0);
+    background-color: rgb(255, 255, 255);
 }
 
 section {
-	position: fixed;
-	width: 100%;
-	height: 100%;
+    position: fixed;
+    width: 100%;
+    height: 100%;
 }
 .hidden {
-	left: 1000px;
-	top: 1000px;
-	pointer-events: none;
+    left: 1000px;
+    top: 1000px;
+    pointer-events: none;
 }
 
 .spinner {
-	background: url(../img/spinner.svg) center no-repeat;
-    	-webkit-animation: rotate 1.5s infinite steps(12);
-    	   -moz-animation: rotate 1.5s infinite steps(12);
-    	    -ms-animation: rotate 1.5s infinite steps(12);
-    	     -o-animation: rotate 1.5s infinite steps(12);
-    	        animation: rotate 1.5s infinite steps(12);
+    background: url(../img/spinner.svg) center no-repeat;
+    -webkit-animation: rotate 1.5s infinite steps(12);
+    -moz-animation: rotate 1.5s infinite steps(12);
+    -ms-animation: rotate 1.5s infinite steps(12);
+    -o-animation: rotate 1.5s infinite steps(12);
+    animation: rotate 1.5s infinite steps(12);
 }
 
 header {
-	position: absolute;
-	top:0;
-	height: 44px;
-	line-height: 44px;
-	width: 100%;
-	padding-top: 0;
-	background-color: rgba(248, 248, 248, 0.9);
-	background-image: linear-gradient(0deg, rgb(200, 199, 204), rgb(200, 199, 204) 50%, transparent 50%);
-	background-size: 100% 1px;
-	background-repeat: no-repeat;
-	background-position: bottom;
-	z-index: 10;
-	-webkit-user-select: none;
-	   -moz-user-select: none;
-	        user-select: none;
-	-webkit-touch-callout: none;
+    position: absolute;
+    top:0;
+    height: 44px;
+    line-height: 44px;
+    width: 100%;
+    padding-top: 0;
+    background-color: rgba(248, 248, 248, 0.9);
+    background-image: linear-gradient(0deg, rgb(200, 199, 204), rgb(200, 199, 204) 50%, transparent 50%);
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    z-index: 10;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
 }
 header button,
 header a {
-	position: absolute;
-	top: 0;
-	display: inline-block;
-	-webkit-tap-highlight-color: rgba(0,0,0,0);
-	font-size: 17px;
-	color:rgb(21, 125, 251);
-	padding: 0;
-	font-weight: 300;
-	height: 44px;
-	line-height: 44px;
-	text-overflow: ellipsis !important; /* why so !important ? */
-	max-width: 140px;
+    position: absolute;
+    top: 0;
+    display: inline-block;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    font-size: 17px;
+    color:rgb(21, 125, 251);
+    padding: 0;
+    font-weight: 300;
+    height: 44px;
+    line-height: 44px;
+    text-overflow: ellipsis !important; /* why so !important ? */
+    max-width: 140px;
     text-decoration: none;
     cursor: default;
 }
 header button:active,
 header a:active {
-	opacity: 0.3;
+    opacity: 0.3;
 }
 header button.bold,
 header a.bold {
-	font-weight: 500;
+    font-weight: 500;
 }
 header button.green,
 header a.green {
-	color:rgb(41, 197, 25);
+    color:rgb(41, 197, 25);
 }
 header button.disabled,
 header a.disabled {
-	color:rgb(200, 199, 204);
+    color:rgb(200, 199, 204);
 }
 header button.arrow,
 header a.arrow {
-	background-size: 24px 44px;
-	background-repeat: no-repeat;
+    background-size: 24px 44px;
+    background-repeat: no-repeat;
 }
 
 header button.left,
 header a.left {
-	left:0;
-	padding-left: 9px;
+    left:0;
+    padding-left: 9px;
 }
 header button.left.arrow,
 header a.left.arrow {
@@ -146,64 +146,64 @@ header a.left.arrow {
 }
 header button.right,
 header a.right {
-	right:0;
-	text-align: right;
-	padding-right: 9px;
+    right:0;
+    text-align: right;
+    padding-right: 9px;
 }
 header button.right.arrow,
 header a.right.arrow {
-	padding-right: 23px;
-	background-image: url(../img/nextBtn.svg);
-	background-position: right bottom;
+    padding-right: 23px;
+    background-image: url(../img/nextBtn.svg);
+    background-position: right bottom;
 }
 
 
 h1 {
-	display: block;
-	padding: 0;
-	font-size: 17px;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	text-align: center;
-	overflow: hidden;
-	-webkit-box-flex: 1;
-	   -moz-box-flex: 1;
-	        box-flex: 1;
-	margin: 0 65px;
-	font-weight: 500;
+    display: block;
+    padding: 0;
+    font-size: 17px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: center;
+    overflow: hidden;
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    box-flex: 1;
+    margin: 0 65px;
+    font-weight: 500;
     -webkit-tap-highlight-color: transparent;
 }
 
 .scrollWrap {
-	position: absolute;
-	top: 0;
-	overflow: hidden;
-	width: 100%;
-	height: 100%;
+    position: absolute;
+    top: 0;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
 }
 .scroll {
-	width: 100%;
-	padding-right: 20px;
-	height: 100%;
-	background-color: #EFEFF4;
-	overflow: auto;
-	-webkit-overflow-scrolling: touch;
-	z-index: 1;
-	opacity: 1;
+    width: 100%;
+    padding-right: 20px;
+    height: 100%;
+    background-color: #EFEFF4;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    z-index: 1;
+    opacity: 1;
 }
 
 .content {
-	line-height: 1em;
-	margin-top: 44px;
-	font-weight: 400;
+    line-height: 1em;
+    margin-top: 44px;
+    font-weight: 400;
 }
 input, textarea {
-	display: block;
-	position: relative;
-	width: 90.6%;
+    display: block;
+    position: relative;
+    width: 90.6%;
     -webkit-appearance: none;
-       -moz-appearance: none;
-            appearance: none;
+    -moz-appearance: none;
+    appearance: none;
     font-weight: 300;
     border-radius: 0;
     box-shadow: none;
@@ -211,10 +211,10 @@ input, textarea {
     /*margin-left: 4.7%;*/
     background-color: transparent;
     -webkit-tap-highlight-color: transparent;
-	/*background-image: linear-gradient(0deg, rgb(200, 199, 204), rgb(200, 199, 204) 50%, transparent 50%);*/
-	/*background-size: 100% 1px;*/
-	/*background-repeat: no-repeat;*/
-	/*background-position: bottom;*/
+    /*background-image: linear-gradient(0deg, rgb(200, 199, 204), rgb(200, 199, 204) 50%, transparent 50%);*/
+    /*background-size: 100% 1px;*/
+    /*background-repeat: no-repeat;*/
+    /*background-position: bottom;*/
 }
 select {
     width:100%;
@@ -231,36 +231,51 @@ input {
 }
 
 li {
-	display: block;
+    display: block;
     padding: 6px 15px 6px 0;
     margin-left: 15px;
     font-weight: 300;
-	background-image: linear-gradient(0deg, rgb(200, 199, 204), rgb(200, 199, 204) 50%, transparent 50%);
-	background-size: 100% 1px;
-	background-repeat: no-repeat;
-	background-position: bottom;
+    background-image: linear-gradient(0deg, rgb(200, 199, 204), rgb(200, 199, 204) 50%, transparent 50%);
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+    background-position: bottom;
     min-height: 44px;
     box-sizing: border-box;
     line-height: 31px;
 }
 li .big {
-	font-weight: 500;
+    font-weight: 500;
+    height: 31px;
+    text-overflow: clip;
+    display: inline-block;
+    width: 214px;
+    overflow: hidden;
+    white-space: nowrap;
 }
 li .light {
-	color: rgb(111, 111, 116);
-	padding: 10px 0 5px 0;
+    color: rgb(111, 111, 116);
+    display: inline-block;
+    width: 56px;
+    text-align: right;
+    overflow: hidden;
 }
 .arrowed .innerLi {
-	background-image: url(../img/listArrow.svg);
-	background-size: 15px 15px;
-	background-repeat: no-repeat;
-	background-position: right center;
-    padding-right: 5%;
+    background-image: url(../img/listArrow.svg);
+    background-size: 15px 15px;
+    background-repeat: no-repeat;
+    background-position: 300px center;
+    display: block;
+    margin: -6px -15px;
+    padding: 6px 15px;
+    height: 33px;
+    width: 100%;
+    box-sizing: content-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 h2 {
-	line-height: 1.5em;
-	font-weight: 400;
+    line-height: 1.5em;
+    font-weight: 400;
     padding: 6px;
     font-size: 17px;
     color: #6D6D72;
@@ -268,20 +283,20 @@ h2 {
     margin-left: 10px;
 }
 p {
-	line-height: 1.5em;
-	text-align: center;
+    line-height: 1.5em;
+    text-align: center;
     padding: 6px;
 }
 .content button {
-	padding: 12px 18px;
-	border-radius: 6px;
-	box-shadow: 0 1px 1px -1px rgba(200, 199, 204, .5);
-	font-weight: 300;
-	font-size: 18px;
+    padding: 12px 18px;
+    border-radius: 6px;
+    box-shadow: 0 1px 1px -1px rgba(200, 199, 204, .5);
+    font-weight: 300;
+    font-size: 18px;
     -webkit-tap-highlight-color: transparent;
 }
 .content button:active {
-	opacity: 0.3;
+    opacity: 0.3;
 }
 
 
@@ -296,20 +311,20 @@ em {
 }
 
 .native header button, .native header {
-	padding-top: 20px;
+    padding-top: 20px;
 }
 .native .content {
-	margin-top: 64px;
+    margin-top: 64px;
 }
 .native .nav-icons {
-	top: 20px;
+    top: 20px;
 }
 .native .scrollMask {
-	top: 64px;
+    top: 64px;
 }
 .ios7 li, .ios7 header {
-	background-image: none;
-	border-bottom: 1px solid rgb(200, 199, 204);
+    background-image: none;
+    border-bottom: 1px solid rgb(200, 199, 204);
 }
 ul {
     background: #fff;
@@ -337,17 +352,18 @@ ul {
 .ios7 li select:active {
 }
 .ios7 li input[type=submit]:active,
-.ios7 li button:active {
-    background: #DDD;
+.ios7 li button:active,
+.ios7 li a.innerLi:active {
+    background-color: #DDD;
 }
 
 @media (-webkit-max-device-pixel-ratio: 1) {
-	li, input, textarea, header {
-		background-image: none;
-	}
+    li, input, textarea, header {
+        background-image: none;
+    }
 }
 @media (max-device-pixel-ratio: 1) {
-	li, input, textarea, header {
-		background-image: none;
-	}
+    li, input, textarea, header {
+        background-image: none;
+    }
 }

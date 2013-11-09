@@ -9,23 +9,23 @@
             <div class="content">
                 <h2>Вам должны</h2>
                 <ul class="arrowed">
-                    <li ng-repeat="user in user.oweYou">
-                        <div class="innerLi">
-                            <div class="big">{{ user.email }}</div>
-                            <div class="light">{{ user.totalSum }}{{ settings.currency }}</div>
-                        </div>
-                    </li>
                     <li ng-hide="user.oweYou">Вам никто не должен</li>
+                    <li ng-repeat="(userId, sum) in user.oweYouGrouped">
+                        <a class="innerLi">
+                            <span class="big">{{ users.list[userId].email }}</span>
+                            <span class="light">{{ sum }}{{ settings.currency }}</span>
+                        </a>
+                    </li>
                 </ul>
                 <h2>Вы задолжали</h2>
                 <ul class="arrowed">
-                    <li ng-repeat="user in user.youOwe">
-                        <div class="innerLi">
-                            <div class="big">{{ user.email }}</div>
-                            <div class="light">{{ user.totalSum }}{{ settings.currency }}</div>
-                        </div>
-                    </li>
                     <li ng-hide="user.youOwe">Вы перед всеми чисты</li>
+                    <li ng-repeat="user in user.youOwe">
+                        <a class="innerLi">
+                            <span class="big">{{ user.email }}</span>
+                            <span class="light">{{ user.totalSum }}{{ settings.currency }}</span>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>

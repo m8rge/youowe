@@ -1,19 +1,4 @@
-var app = angular.module("YouOweApp", ['ngRoute']);
-
-app.directive('focusOn', function($timeout) {
-    return {
-        restrict: "A",
-        link: function(scope, element, attrs) {
-            scope.$watch(attrs.focusOn, function(value) {
-                if(value === true) {
-                    $timeout(function() {
-                        element[0].focus();
-                    });
-                }
-            });
-        }
-    };
-});
+var app = angular.module("YouOweApp", ['ngRoute', 'globalErrors']);
 
 app.config(function ($routeProvider) {
     $routeProvider.
@@ -64,8 +49,29 @@ app.factory('Users', function($http, $rootScope, $location) {
 app.factory('User', function ($http, $rootScope, $location, Users) {
     var user = {
         loggedIn: false,
-        oweYou: [],
-        youOwe: []
+        _oweYou: [],
+        set oweYou(value) {
+            this._oweYou = value;
+        },
+        get oweYou() {
+            return this._oweYou;
+        },
+        youOwe: [],
+        _oweYouGrouped: {},
+        get oweYouGrouped() {
+            this._oweYouGrouped = {};
+            for (var i in this._oweYou) {
+                if (this._oweYou.hasOwnProperty(i)) {
+                    var item = this._oweYou[i];
+                    if (this._oweYouGrouped[item.destUserId] == undefined) {
+                        this._oweYouGrouped[item.destUserId] = item.sum;
+                    } else {
+                        this._oweYouGrouped[item.destUserId] += item.sum;
+                    }
+                }
+            }
+            return this._oweYouGrouped;
+        }
     };
 
     user.login = function () {
@@ -144,9 +150,10 @@ app.controller("AddDebtController", function($scope, $http, $location, Settings,
         if (!$scope.AddDebtForm.$valid) {
             alert('Пожалуйста исправьте ошибки и попробуйте заново');
         } else {
-            $http.post('v1/debt', $scope.addDebt).success(function (data, status) {
+            $http.post('v1/debts', $scope.newDebt).success(function (data, status) {
                 if (status == 201) {
-                    alert('Теперь Вы можете войти под своими реквизитами');
+                    User.oweYou.push(data);
+                    $location.path('/');
                 } else {
                     alert('error: '. data);
                 }
