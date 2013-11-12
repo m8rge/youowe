@@ -1,0 +1,21 @@
+<section>
+    <header>
+        <a class="left arrow" href="#/">Главная</a>
+        <h1>{{users.list[userId].email}}</h1>
+    </header>
+    <div class="scrollWrap">
+        <div class="scroll">
+            <div class="content">
+                <h2>История</h2>
+                <ul>
+                    <li ng-repeat="debt in history">
+                        <div class="innerLi" ng-class="debt.direction">
+                            <span class="normal">{{ debt.date | date:'dd.MM.yyyy HH:mm' }}</span>
+                            <span class="light">{{ debt.sum }}{{ settings.currency }}</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>

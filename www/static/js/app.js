@@ -29,6 +29,10 @@ app.factory('Settings', function(){
     }
 });
 
+app.factory('HistoryData', function() {
+    return {}
+});
+
 app.factory('Users', function($http, $rootScope, $location) {
     var users = {
         list: {}
@@ -65,13 +69,17 @@ app.factory('User', function ($http, $rootScope, $location, Users) {
         return Object.keys(this.youOwe).length == 0;
     };
 
+    user.refreshSummary = function() {
+        $http.get('/v1/debts/summary.json').success(function (data) {
+            user.oweYou = data.youGave;
+            user.youOwe = data.youTook;
+        });
+    };
+
     user.login = function () {
         Users.loadData(function() {
             user.loggedIn = true;
-            $http.get('/v1/debts/debts.json').success(function (data) {
-                user.oweYou = data.youGave;
-                user.youOwe = data.youTake;
-            });
+            user.refreshSummary();
             $rootScope.$broadcast('loginSuccess');
         });
     };
@@ -102,6 +110,8 @@ app.controller("AppController", function ($scope, $window, $location, Users, Use
 
     if (!User.loggedIn) {
         User.login();
+    } else {
+        User.refreshSummary();
     }
 });
 
@@ -141,7 +151,6 @@ app.controller("AddDebtController", function($scope, $http, $location, Settings,
         } else {
             $http.post('v1/debts', $scope.newDebt).success(function (data, status) {
                 if (status == 201) {
-                    User.oweYou.push(data);
                     $location.path('/');
                 } else {
                     alert('error: '. data);
@@ -151,7 +160,7 @@ app.controller("AddDebtController", function($scope, $http, $location, Settings,
     };
 });
 
-app.controller("HistoryController", function($scope, $routeParams, Settings, User, Users) {
+app.controller("HistoryController", function($scope, $http, $routeParams, Settings, User, Users, HistoryData) {
     if (!User.loggedIn) {
         User.login();
     }
@@ -159,4 +168,23 @@ app.controller("HistoryController", function($scope, $routeParams, Settings, Use
     $scope.settings = Settings;
     $scope.users = Users;
     $scope.userId = $routeParams.userId;
+    if (HistoryData[$routeParams.userId] != undefined) {
+        $scope.history = HistoryData[$routeParams.userId]
+    } else {
+        $scope.history = [];
+    }
+
+    $http.get('/v1/debts/history/'+$routeParams.userId+'.json').success(function (data) {
+        HistoryData[$routeParams.userId] = [];
+        for (var i in data) {
+            if (data.hasOwnProperty(i)) {
+                HistoryData[$routeParams.userId].push({
+                    direction: data[i].sourceUserId == $routeParams.userId ? 'gave' : 'took',
+                    date: new Date(data[i].createdDate*1000),
+                    sum: (data[i].sourceUserId == $routeParams.userId ? '+' : '-') + data[i].sum
+                });
+            }
+        }
+        $scope.history = HistoryData[$routeParams.userId]
+    });
 });

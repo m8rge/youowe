@@ -22,23 +22,4 @@ class Debt extends Illuminate\Database\Eloquent\Model
     const CREATED_AT = 'createdDate';
     const UPDATED_AT = 'updatedDate';
     const DELETED_AT = 'closedDate';
-
-    /**
-     * @param \Illuminate\Database\Query\Builder $query
-     * @return \Illuminate\Database\Query\Builder
-     */
-    public function scopeOpened($query)
-    {
-        return $query->where('closedDate', 'IS NOT', 'NULL');
-    }
-
-    /**
-     * @param \Illuminate\Database\Query\Builder $query
-     * @return \Illuminate\Database\Query\Builder
-     */
-    public function scoreOrderDefault($query)
-    {
-        return $query->orderBy('createdDate', 'DESC');
-    }
-
 }

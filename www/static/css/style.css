@@ -243,7 +243,8 @@ li {
     box-sizing: border-box;
     line-height: 31px;
 }
-li .big {
+li .big,
+li .normal {
     font-weight: 500;
     height: 31px;
     text-overflow: clip;
@@ -251,6 +252,15 @@ li .big {
     width: 214px;
     overflow: hidden;
     white-space: nowrap;
+}
+li .normal {
+    font-weight: inherit;
+}
+li .took {
+    color: brown;
+}
+li .gave {
+    color: forestgreen;
 }
 li .light {
     color: rgb(111, 111, 116);
