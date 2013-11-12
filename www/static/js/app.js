@@ -14,6 +14,10 @@ app.config(function ($routeProvider) {
             templateUrl: 'partials/add.html',
             controller: 'AddDebtController'
         }).
+        when('/history/:userId', {
+            templateUrl: 'partials/history.html',
+            controller: 'HistoryController'
+        }).
         otherwise({
             redirectTo: '/'
         });
@@ -27,7 +31,7 @@ app.factory('Settings', function(){
 
 app.factory('Users', function($http, $rootScope, $location) {
     var users = {
-        list: []
+        list: {}
     };
 
     users.loadData = function(successCallback) {
@@ -40,7 +44,7 @@ app.factory('Users', function($http, $rootScope, $location) {
     };
 
     users.clearData = function() {
-        users.list = [];
+        users.list = {};
     };
 
     return users;
@@ -49,39 +53,24 @@ app.factory('Users', function($http, $rootScope, $location) {
 app.factory('User', function ($http, $rootScope, $location, Users) {
     var user = {
         loggedIn: false,
-        _oweYou: [],
-        set oweYou(value) {
-            this._oweYou = value;
-        },
-        get oweYou() {
-            return this._oweYou;
-        },
-        youOwe: [],
-        _oweYouGrouped: {},
-        get oweYouGrouped() {
-            this._oweYouGrouped = {};
-            for (var i in this._oweYou) {
-                if (this._oweYou.hasOwnProperty(i)) {
-                    var item = this._oweYou[i];
-                    if (this._oweYouGrouped[item.destUserId] == undefined) {
-                        this._oweYouGrouped[item.destUserId] = item.sum;
-                    } else {
-                        this._oweYouGrouped[item.destUserId] += item.sum;
-                    }
-                }
-            }
-            return this._oweYouGrouped;
-        }
+        oweYou: {},
+        youOwe: {}
+    };
+
+    user.emptyOweYou = function() {
+        return Object.keys(this.oweYou).length == 0;
+    };
+
+    user.emptyYouOwe = function() {
+        return Object.keys(this.youOwe).length == 0;
     };
 
     user.login = function () {
         Users.loadData(function() {
             user.loggedIn = true;
-            $http.get('/v1/debts/oweyou.json').success(function (data) {
-                user.oweYou = data;
-            });
-            $http.get('/v1/debts/youowe.json').success(function (data) {
-                user.youOwe = data;
+            $http.get('/v1/debts/debts.json').success(function (data) {
+                user.oweYou = data.youGave;
+                user.youOwe = data.youTake;
             });
             $rootScope.$broadcast('loginSuccess');
         });
@@ -90,8 +79,8 @@ app.factory('User', function ($http, $rootScope, $location, Users) {
     user.logout = function () {
         Users.clearData();
         this.loggedIn = false;
-        this.oweYou = [];
-        this.youOwe = [];
+        this.oweYou = {};
+        this.youOwe = {};
 
         $http.post($location.protocol() + '://::@' + $location.host() + ':' + $location.port() + '/v1/logout').success(function () {
             user.login();
@@ -160,4 +149,14 @@ app.controller("AddDebtController", function($scope, $http, $location, Settings,
             });
         }
     };
+});
+
+app.controller("HistoryController", function($scope, $routeParams, Settings, User, Users) {
+    if (!User.loggedIn) {
+        User.login();
+    }
+
+    $scope.settings = Settings;
+    $scope.users = Users;
+    $scope.userId = $routeParams.userId;
 });

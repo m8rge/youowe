@@ -271,6 +271,9 @@ li .light {
     width: 100%;
     box-sizing: content-box;
     -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    color: #000;
+    text-decoration: none;
 }
 
 h2 {
