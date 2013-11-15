@@ -47,7 +47,7 @@ angular
                 responseError: function(errorResponse) {
                     if (errorResponse.data.message) {
                         alert('Ошибка: ' + errorResponse.data.message);
-                    } else {
+                    } else if (errorResponse.status != 401) {
                         alert('Ошибка на сервере с кодом ' + errorResponse.status);
                     }
                     return $q.reject(errorResponse);
