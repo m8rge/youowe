@@ -12,7 +12,7 @@
                     <li ng-show="user.emptyOweYou()">Вам никто не должен</li>
                     <li ng-repeat="(userId, sum) in user.oweYou">
                         <a class="innerLi" href="#/history/{{userId}}">
-                            <span class="big">{{ users.list[userId].email }}</span>
+                            <span class="big">{{ users.list[userId].title }}</span>
                             <span class="light">{{ sum }}{{ settings.currency }}</span>
                         </a>
                     </li>
@@ -22,7 +22,7 @@
                     <li ng-show="user.emptyYouOwe()">Вы перед всеми чисты</li>
                     <li ng-repeat="(userId, sum) in user.youOwe">
                         <a class="innerLi" href="#/history/{{userId}}">
-                            <span class="big">{{ users.list[userId].email }}</span>
+                            <span class="big">{{ users.list[userId].title }}</span>
                             <span class="light">{{ sum }}{{ settings.currency }}</span>
                         </a>
                     </li>

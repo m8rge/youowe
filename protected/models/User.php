@@ -4,6 +4,7 @@
  * Class User
  *
  * @property int id
+ * @property string nickname
  * @property string email
  * @property string hashedPassword
  *
@@ -12,7 +13,7 @@
  */
 class User extends Illuminate\Database\Eloquent\Model
 {
-    protected $fillable = array('email', 'password');
+    protected $fillable = array('nickname', 'email', 'password');
     protected $hidden = array('hashedPassword');
 
     public $timestamps = false;

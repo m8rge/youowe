@@ -4,7 +4,7 @@ $app->get(
     "/$apiVersion/users.json",
     $authenticate(),
     function () use ($app) {
-        $users = User::where('id', '!=', $_SESSION['user']['id'])->get(array('id', 'email'));
+        $users = User::where('id', '!=', $_SESSION['user']['id'])->get(array('id', 'email', 'nickname'));
         $result = array();
         /** @var User $user */
         foreach ($users as $user) {
@@ -22,12 +22,7 @@ $app->post(
         if (User::where('email', '=', $_POST['email'])->count()) {
             throw new UserException('email already exists');
         }
-        $user = User::create(
-            array(
-                'email' => $_POST['email'],
-                'password' => $_POST['password'],
-            )
-        );
+        $user = User::create($_POST);
         $app->status(201);
         echo $user->toJson();
     }

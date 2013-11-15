@@ -30,7 +30,15 @@ app.factory('Settings', function(){
 });
 
 app.factory('HistoryData', function() {
-    return {}
+    var historyData = {
+        list: {}
+    };
+
+    historyData.clearData = function() {
+        this.list = {};
+    };
+
+    return historyData;
 });
 
 app.factory('Users', function($http, $rootScope, $location) {
@@ -40,6 +48,15 @@ app.factory('Users', function($http, $rootScope, $location) {
 
     users.loadData = function(successCallback) {
         $http.get('/v1/users.json').success(function (data) {
+            for (var i in data) {
+                if (data.hasOwnProperty(i)) {
+                    if (data[i].nickname != '') {
+                        data[i].title = data[i].nickname + ' <' + data[i].email +'>';
+                    } else {
+                        data[i].title = data[i].email;
+                    }
+                }
+            }
             users.list = data;
             successCallback();
         }).error(function () {
@@ -48,13 +65,13 @@ app.factory('Users', function($http, $rootScope, $location) {
     };
 
     users.clearData = function() {
-        users.list = {};
+        this.list = {};
     };
 
     return users;
 });
 
-app.factory('User', function ($http, $rootScope, $location, Users) {
+app.factory('User', function ($http, $rootScope, $location, Users, HistoryData) {
     var user = {
         loggedIn: false,
         oweYou: {},
@@ -86,6 +103,7 @@ app.factory('User', function ($http, $rootScope, $location, Users) {
 
     user.logout = function () {
         Users.clearData();
+        HistoryData.clearData();
         this.loggedIn = false;
         this.oweYou = {};
         this.youOwe = {};
@@ -168,23 +186,23 @@ app.controller("HistoryController", function($scope, $http, $routeParams, Settin
     $scope.settings = Settings;
     $scope.users = Users;
     $scope.userId = $routeParams.userId;
-    if (HistoryData[$routeParams.userId] != undefined) {
-        $scope.history = HistoryData[$routeParams.userId]
+    if (HistoryData.list[$routeParams.userId] != undefined) {
+        $scope.history = HistoryData.list[$routeParams.userId]
     } else {
         $scope.history = [];
     }
 
     $http.get('/v1/debts/history/'+$routeParams.userId+'.json').success(function (data) {
-        HistoryData[$routeParams.userId] = [];
+        HistoryData.list[$routeParams.userId] = [];
         for (var i in data) {
             if (data.hasOwnProperty(i)) {
-                HistoryData[$routeParams.userId].push({
+                HistoryData.list[$routeParams.userId].push({
                     direction: data[i].sourceUserId == $routeParams.userId ? 'gave' : 'took',
                     date: new Date(data[i].createdDate*1000),
                     sum: (data[i].sourceUserId == $routeParams.userId ? '+' : '-') + data[i].sum
                 });
             }
         }
-        $scope.history = HistoryData[$routeParams.userId]
+        $scope.history = HistoryData.list[$routeParams.userId]
     });
 });
