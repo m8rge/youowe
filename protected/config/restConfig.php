@@ -2,39 +2,29 @@
 
 /** @var \Slim\Slim $app */
 
-include_once(__DIR__ . '/../components/HttpException.php');
 include_once(__DIR__ . '/../components/UserException.php');
 include_once(__DIR__ . '/../components/JsonPostContentType.php');
 
 $apiVersion = 'v1';
 $app->error(
     function (\Exception $e) use ($app) {
+        $userExceptionCode = null;
         if ($e instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
             $status = 404;
-            $app->status($status);
-            echo json_encode(
-                array(
-                    'status' => $status,
-                    'message' => "Not Found",
-                )
-            );
-        } elseif ($e instanceof HttpException || $e instanceof UserException) {
-            /** @var Exception $e */
-            $status = $e->getCode() ? $e->getCode() : 500;
-            $app->status($status);
-            echo json_encode(
-                array(
-                    'status' => $status,
-                    'message' => $e->getMessage(),
-                )
-            );
+        } elseif ($e instanceof HttpException) {
+            $status = $e->getMessage();
+        } elseif ($e instanceof UserException) {
+            $status = $e->getCode();
+            $userExceptionCode = $e->getUserExceptionCode();
         } else {
-            echo json_encode(
-                array(
-                    'status' => 500,
-                    'message' => 'An error has occurred',
-                )
-            );
+            $status = 500;
+        }
+
+        $app->status($status);
+        if (!is_null($userExceptionCode)) {
+            echo json_encode(['status' => $status, 'error' => $userExceptionCode]);
+        } else {
+            echo json_encode(['status' => $status]);
         }
     }
 );

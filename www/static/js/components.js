@@ -45,8 +45,8 @@ angular
         $httpProvider.interceptors.push(function($timeout, $q) {
             return {
                 responseError: function(errorResponse) {
-                    if (errorResponse.data.message) {
-                        alert('Ошибка: ' + errorResponse.data.message);
+                    if (errorResponse.data.error) {
+                        alert('Ошибка: ' + errorResponse.data.error);
                     } else if (errorResponse.status != 401) {
                         alert('Ошибка на сервере с кодом ' + errorResponse.status);
                     }

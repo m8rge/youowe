@@ -20,7 +20,7 @@ $app->post(
     $requiredPostFields(array('email', 'password')),
     function () use ($app) {
         if (User::where('email', '=', $_POST['email'])->count()) {
-            throw new UserException('email already exists');
+            throw new UserException('register-emailExists');
         }
         $user = User::create($_POST);
         $app->status(201);
