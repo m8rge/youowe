@@ -13,6 +13,7 @@ include_once(__DIR__ . '/models/Debt.php');
     array(
         'id' => '\d+',
         'debtId' => '\d+',
+        'userId' => '\d+',
     )
 );
 $app->add(

@@ -6,6 +6,14 @@
     <div class="scrollWrap">
         <div class="scroll">
             <div class="content">
+                <form name="remindForm" ng-submit="remind()">
+                    <h2></h2>
+                    <ul>
+                        <li>
+                            <input type="submit" value="Напомнить"/>
+                        </li>
+                    </ul>
+                </form>
                 <h2>История</h2>
                 <ul>
                     <li ng-repeat="debt in history">

@@ -14,6 +14,10 @@ app.config(function ($routeProvider) {
             templateUrl: 'partials/add.html',
             controller: 'AddDebtController'
         }).
+        when('/profile', {
+            templateUrl: 'partials/profile.html',
+            controller: 'ProfileController'
+        }).
         when('/history/:userId', {
             templateUrl: 'partials/history.html',
             controller: 'HistoryController'
@@ -205,4 +209,14 @@ app.controller("HistoryController", function($scope, $http, $routeParams, Settin
         }
         $scope.history = HistoryData.list[$routeParams.userId]
     });
+
+    $scope.remind = function () {
+        $http.post('/v1/notify/'+$routeParams.userId).success(function (data, status) {
+            if (status == 204) {
+                alert('E-mail сообщение отправлено успешно');
+            } else {
+                alert('При отправке e-mail сообщения произошла ошибка');
+            }
+        });
+    };
 });
