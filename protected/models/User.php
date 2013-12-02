@@ -29,6 +29,18 @@ class User extends Illuminate\Database\Eloquent\Model
         );
     }
 
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        if (!empty($this->nickname)) {
+            return $this->nickname . " <" . $this->email . '>';
+        } else {
+            return $this->email;
+        }
+    }
+
     public function setPasswordAttribute($value)
     {
         $this->attributes['hashedPassword'] = $this->hashPassword($value);
