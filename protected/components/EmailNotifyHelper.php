@@ -32,11 +32,11 @@ class EmailNotifyHelper
 //        return $mail->send();
     }
 
-    public static function debtNotify($from, $to, $sourceUserTitle, $sum)
+    public static function debtNotify($from, $fromName, $to, $sourceUserTitle, $sum)
     {
         $mail = new AlternativeMail();
         $mail->addTo($to)
-            ->setFrom($from)
+            ->setFrom($from, $fromName)
             ->setSubject("Вы должны {$sum}р.");
         $mail->setTextBody("Пользователь {$sourceUserTitle} напоминает, что Вы должны ему {$sum}р." . self::getFooter());
         return $mail->send();

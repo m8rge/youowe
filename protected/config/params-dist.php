@@ -13,5 +13,6 @@ return array(
         'prefix' => '',
     ),
     'emailFrom' => '',
+    'projectName' => '',
     'projectHost' => '',
 );

@@ -2,15 +2,6 @@
 
 use Illuminate\Database\Query\Expression;
 
-function ModelsArrayToArrayOfArrays($value)
-{
-    if ($value instanceof \Illuminate\Database\Eloquent\Model) {
-        return $value->toArray();
-    } else {
-        return $value;
-    }
-}
-
 $app->get(
     "/$apiVersion/debts/summary.json",
     $authenticate(),
@@ -135,7 +126,7 @@ $app->post(
         /** @var User $destUser */
         $destUser = User::findOrFail($userId);
 
-        $sent = EmailNotifyHelper::debtNotify($params['emailFrom'], $destUser->email, $me->getTitle(), $sum);
+        $sent = EmailNotifyHelper::debtNotify($params['emailFrom'], $params['projectName'], $destUser->email, $me->getTitle(), $sum);
 
         if (!$sent) {
             throw new Exception('notify-emailSentFailed');
