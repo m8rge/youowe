@@ -46,7 +46,7 @@ $requiredPostFields = function ($fields) {
     return function () use ($fields) {
         foreach ($fields as $field) {
             if (empty($_POST[$field])) {
-                throw new HttpException(400);
+                throw new UserException('wrongPostFields');
             }
         }
     };

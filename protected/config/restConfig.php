@@ -2,6 +2,7 @@
 
 /** @var \Slim\Slim $app */
 
+include_once(__DIR__ . '/../components/HttpException.php');
 include_once(__DIR__ . '/../components/UserException.php');
 include_once(__DIR__ . '/../components/JsonPostContentType.php');
 
