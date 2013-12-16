@@ -4,7 +4,8 @@ $app->post(
     "/$apiVersion/login",
     $authenticate(),
     function () use ($app) {
-        $app->status(204);
+        $user = User::findOrFail($_SESSION['user']['id']);
+        echo $user->toJson();
     }
 );
 

@@ -50,7 +50,7 @@ app.factory('Users', function($http, $rootScope, $location) {
         list: {}
     };
 
-    users.loadData = function(successCallback) {
+    users.loadData = function() {
         $http.get('/v1/users.json').success(function (data) {
             for (var i in data) {
                 if (data.hasOwnProperty(i)) {
@@ -62,7 +62,6 @@ app.factory('Users', function($http, $rootScope, $location) {
                 }
             }
             users.list = data;
-            successCallback();
         }).error(function () {
             $location.path('/register');
         });
@@ -76,11 +75,22 @@ app.factory('Users', function($http, $rootScope, $location) {
 });
 
 app.factory('User', function ($http, $rootScope, $location, Users, HistoryData) {
-    var user = {
-        loggedIn: false,
-        oweYou: {},
-        youOwe: {}
-    };
+    var user = {};
+
+    function nullUser() {
+        user.loggedIn = false;
+        user.id = null;
+        user.nickname = null;
+        user.email = null;
+        user.oweYou = {};
+        user.youOwe = {};
+    }
+    function nullSession() {
+        Users.clearData();
+        HistoryData.clearData();
+        nullUser();
+    }
+    nullUser();
 
     user.emptyOweYou = function() {
         return Object.keys(this.oweYou).length == 0;
@@ -94,23 +104,28 @@ app.factory('User', function ($http, $rootScope, $location, Users, HistoryData) 
         $http.get('/v1/debts/summary.json').success(function (data) {
             user.oweYou = data.youGave;
             user.youOwe = data.youTook;
+        }).error(function () {
+            nullSession();
+            $location.path('/register');
         });
     };
 
     user.login = function () {
-        Users.loadData(function() {
+        $http.post('/v1/login').success(function (data) {
+            user.id = data.id;
+            user.nickname = data.nickname;
+            user.email = data.email;
             user.loggedIn = true;
             user.refreshSummary();
+            Users.loadData();
             $rootScope.$broadcast('loginSuccess');
+        }).error(function () {
+            $location.path('/register');
         });
     };
 
     user.logout = function () {
-        Users.clearData();
-        HistoryData.clearData();
-        this.loggedIn = false;
-        this.oweYou = {};
-        this.youOwe = {};
+        nullSession();
 
         $http.post($location.protocol() + '://::@' + $location.host() + ':' + $location.port() + '/v1/logout').success(function () {
             user.login();
@@ -171,7 +186,7 @@ app.controller("AddDebtController", function($scope, $http, $location, Settings,
         if (!$scope.AddDebtForm.$valid) {
             alert('Пожалуйста исправьте ошибки и попробуйте заново');
         } else {
-            $http.post('v1/debts', $scope.newDebt).success(function (data, status) {
+            $http.post('/v1/debts', $scope.newDebt).success(function (data, status) {
                 if (status == 201) {
                     $location.path('/');
                 } else {
@@ -218,5 +233,41 @@ app.controller("HistoryController", function($scope, $http, $routeParams, Settin
                 alert('При отправке e-mail сообщения произошла ошибка');
             }
         });
+    };
+});
+
+app.controller("ProfileController", function($scope, $http, $routeParams, $location, User) {
+    if (!User.loggedIn) {
+        User.login();
+    }
+
+    $scope.user = {
+        id: User.id,
+        email: User.email,
+        nickname: User.nickname
+    };
+    $scope.$on('loginSuccess', function() {
+        $scope.user = {
+            id: User.id,
+            email: User.email,
+            nickname: User.nickname
+        };
+    });
+
+    $scope.updateProfile = function() {
+        if (!$scope.profileForm.$valid) {
+            alert('Пожалуйста исправьте ошибки и попробуйте заново');
+        } else {
+            $http.post('/v1/users/' + $scope.user.id, $scope.user).success(function (data, status) {
+                if (status == 200) {
+                    User.id = data.id;
+                    User.nickname = data.nickname;
+                    User.email = data.email;
+                    $location.path('/');
+                } else {
+                    alert('error: '. data);
+                }
+            });
+        }
     };
 });

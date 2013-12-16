@@ -248,7 +248,7 @@ li .normal {
     font-weight: 500;
     height: 31px;
     text-overflow: clip;
-    display: inline-block;
+    /*display: inline-block;*/
     width: 214px;
     overflow: hidden;
     white-space: nowrap;
@@ -264,7 +264,7 @@ li .gave {
 }
 li .light {
     color: rgb(111, 111, 116);
-    display: inline-block;
+    /*display: inline-block;*/
     width: 56px;
     text-align: right;
     overflow: hidden;
@@ -379,4 +379,7 @@ ul {
     li, input, textarea, header {
         background-image: none;
     }
+}
+input.ng-invalid-required::-webkit-input-placeholder {
+    color: rgb(218, 111, 111);
 }

@@ -45,10 +45,12 @@ angular
         $httpProvider.interceptors.push(function($timeout, $q) {
             return {
                 responseError: function(errorResponse) {
-                    if (errorResponse.data.error) {
-                        alert('Ошибка: ' + errorResponse.data.error);
-                    } else if (errorResponse.status != 401) {
-                        alert('Ошибка на сервере с кодом ' + errorResponse.status);
+                    if (errorResponse.status != 401) {
+                        if (errorResponse.data.error) {
+                            alert('Ошибка: ' + errorResponse.data.error);
+                        } else {
+                            alert('Ошибка на сервере с кодом ' + errorResponse.status);
+                        }
                     }
                     return $q.reject(errorResponse);
                 }

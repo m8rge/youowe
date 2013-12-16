@@ -28,18 +28,20 @@ $app->post(
     }
 );
 
-$app->put(
-    "/$apiVersion/users/:id.json",
+$app->post(
+    "/$apiVersion/users/:userId",
     $authenticate(),
-    $requiredPostFields(array('password')),
-    function ($id) use ($app) {
-        if ($_SESSION['user']['id'] != $id) {
+    $requiredPostFields(array('email', 'nickname')),
+    function ($userId) use ($app) {
+        if ($_SESSION['user']['id'] != $userId) {
             throw new HttpException(403);
         }
         /** @var User $user */
-        $user = User::findOrFail($id);
-        $user->password = $_POST['password'];
+        $user = User::findOrFail($userId);
+        foreach ($_POST as $attribute => $value) {
+            $user->setAttribute($attribute, $value);
+        }
         $user->save();
-        $app->status(204);
+        echo $user->toJson();
     }
 );
