@@ -4,7 +4,6 @@
 
 include_once(__DIR__ . '/../components/HttpException.php');
 include_once(__DIR__ . '/../components/UserException.php');
-include_once(__DIR__ . '/../components/JsonPostContentType.php');
 
 $apiVersion = 'v1';
 $app->error(
@@ -37,7 +36,11 @@ $app->notFound(
 $app->hook(
     'slim.before',
     function () use ($app) {
+        if (in_array($_SERVER['REQUEST_METHOD'], ['POST', 'PUT'])) {
+            $postBody = file_get_contents('php://input');
+            $_POST = json_decode($postBody, true);
+        }
+
         $app->contentType('application/json');
     }
 );
-$app->add(new \Slim\Middleware\JsonPostContentType());
