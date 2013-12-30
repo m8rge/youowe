@@ -22,9 +22,9 @@ $app->error(
 
         $app->status($status);
         if (!is_null($userExceptionCode)) {
-            echo json_encode(['status' => $status, 'error' => $userExceptionCode]);
+            echo json_encode(array('status' => $status, 'error' => $userExceptionCode));
         } else {
-            echo json_encode(['status' => $status]);
+            echo json_encode(array('status' => $status));
         }
     }
 );
