@@ -239,6 +239,10 @@ app.controller("HistoryController", function($scope, $http, $routeParams, Settin
             }
         });
     };
+
+    $scope.displayReminderButton = function() {
+        return typeof(User.youOwe) === 'undefined' ? false : typeof(User.youOwe[ $routeParams.userId ]) === 'undefined';
+    }
 });
 
 app.controller("ProfileController", function($scope, $http, $location, User) {
@@ -258,7 +262,7 @@ app.controller("ProfileController", function($scope, $http, $location, User) {
 
     updateUserOnPage();
     $scope.$on('loginSuccess', function() {
-        updateUserOnPage();
+        $location.path('/');
     });
 
     $scope.updateProfile = function() {
