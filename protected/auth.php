@@ -9,6 +9,14 @@ $app->post(
     }
 );
 
+$app->get(
+    "/$apiVersion/decodeToken/:token",
+    function ($token) use ($app, $params) {
+        $user = decodeToken($token);
+        echo $user->toJson();
+    }
+);
+
 $app->post(
     "/$apiVersion/logout",
     $authenticate(),

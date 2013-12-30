@@ -55,16 +55,26 @@ $app->post(
             throw new UserException('newDebt-wrongRecipient');
         }
 
+        $changePasswordToken = null;
         if (!empty($_POST['email'])) {
             if (User::where('email', '=', $_POST['email'])->count()) {
                 throw new UserException('newDebt-emailExists');
             }
             /** @var User $destUser */
+            $password = base64_encode(mcrypt_create_iv(12, MCRYPT_DEV_URANDOM));
             $destUser = User::create(
                 array(
                     'email' => $_POST['email'],
-                    'password' => mcrypt_create_iv(12, MCRYPT_DEV_URANDOM),
+                    'password' => $password,
                 )
+            );
+            $changePasswordToken = ItsDangerous::encode(
+                array(
+                    'userId' => $destUser->id,
+                    'expire' => time() + 3600 * 24 * 7,
+                    'password' => $password
+                ),
+                $params['cryptSecret']
             );
         } else {
             $destUser = User::findOrFail($_POST['destUserId']);
@@ -77,8 +87,24 @@ $app->post(
             )
         );
 
-        $app->status(201);
-        echo $debt->toJson();
+        /** @var User $me */
+        $me = User::findOrFail($_SESSION['user']['id']);
+        $sent = EmailNotifyHelper::newDebtNotify(
+            $params['emailFrom'],
+            $params['projectName'],
+            $destUser->email,
+            $me->getTitle(),
+            $_POST['sum'],
+            $params['projectHost'],
+            $changePasswordToken
+        );
+
+        if (!$sent) {
+            throw new Exception('notify-emailSentFailed');
+        } else {
+            $app->status(201);
+            echo $debt->toJson();
+        }
     }
 );
 
@@ -125,7 +151,6 @@ $app->post(
         $me = User::findOrFail($_SESSION['user']['id']);
         /** @var User $destUser */
         $destUser = User::findOrFail($userId);
-
         $sent = EmailNotifyHelper::debtNotify($params['emailFrom'], $params['projectName'], $destUser->email, $me->getTitle(), $sum);
 
         if (!$sent) {

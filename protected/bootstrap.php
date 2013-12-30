@@ -7,6 +7,8 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 $params = require(__DIR__ . '/config/params.php');
 
 include_once(__DIR__ . '/components/EmailNotifyHelper.php');
+include_once(__DIR__ . '/components/ItsDangerous.php');
+include_once(__DIR__ . '/helpers/token.php');
 
 // setup orm
 $capsule = new Capsule;

@@ -15,4 +15,6 @@ return array(
     'emailFrom' => '',
     'projectName' => '',
     'projectHost' => '',
+    'cryptSecret' => '',
+    'cookieSecret' => '',
 );

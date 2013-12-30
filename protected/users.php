@@ -17,7 +17,7 @@ $app->get(
 
 $app->post(
     "/$apiVersion/users",
-    $requiredPostFields(array('email', 'password')),
+    $requiredPostFields(array('nickname', 'email', 'password')),
     function () use ($app) {
         if (User::where('email', '=', $_POST['email'])->count()) {
             throw new UserException('register-emailExists');
@@ -31,7 +31,7 @@ $app->post(
 $app->post(
     "/$apiVersion/users/:userId",
     $authenticate(),
-    $requiredPostFields(array('email', 'nickname')),
+    $requiredPostFields(array('nickname', 'email', 'nickname')),
     function ($userId) use ($app) {
         if ($_SESSION['user']['id'] != $userId) {
             throw new HttpException(403);
@@ -45,3 +45,17 @@ $app->post(
         echo $user->toJson();
     }
 );
+
+$app->post(
+    "/$apiVersion/updateProfile/:token",
+    $requiredPostFields(array('nickname', 'email', 'password')),
+    function ($token) use ($app, $params) {
+        $user = decodeToken($token);
+        foreach ($_POST as $attribute => $value) {
+            $user->setAttribute($attribute, $value);
+        }
+        $user->save();
+        echo $user->toJson();
+    }
+);
+

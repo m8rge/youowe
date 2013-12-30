@@ -358,6 +358,11 @@ ul {
     width: 100%;
     box-sizing: content-box;
 }
+.ios7 li input[type=submit][disabled],
+.ios7 li button[disabled],
+.ios7 li select {
+    color: #ccc;
+}
 .ios7 li select {
     color: #000;
     height: 41px;
@@ -368,6 +373,11 @@ ul {
 .ios7 li button:active,
 .ios7 li a.innerLi:active {
     background-color: #DDD;
+}
+.ios7 li input[type=submit][disabled]:active,
+.ios7 li button[disabled]:active,
+.ios7 li a[disabled].innerLi:active {
+    background-color: inherit;
 }
 
 @media (-webkit-max-device-pixel-ratio: 1) {

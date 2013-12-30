@@ -18,6 +18,10 @@ app.config(function ($routeProvider) {
             templateUrl: 'partials/profile.html',
             controller: 'ProfileController'
         }).
+        when('/changePassword/:token', {
+            templateUrl: 'partials/changePassword.html',
+            controller: 'ChangePasswordController'
+        }).
         when('/history/:userId', {
             templateUrl: 'partials/history.html',
             controller: 'HistoryController'
@@ -50,7 +54,7 @@ app.factory('Users', function($http, $rootScope, $location) {
         list: {}
     };
 
-    users.loadData = function() {
+    users.refreshData = function() {
         $http.get('/v1/users.json').success(function (data) {
             for (var i in data) {
                 if (data.hasOwnProperty(i)) {
@@ -117,7 +121,7 @@ app.factory('User', function ($http, $rootScope, $location, Users, HistoryData) 
             user.email = data.email;
             user.loggedIn = true;
             user.refreshSummary();
-            Users.loadData();
+            Users.refreshData();
             $rootScope.$broadcast('loginSuccess');
         }).error(function () {
             $location.path('/register');
@@ -149,6 +153,7 @@ app.controller("AppController", function ($scope, $window, $location, Users, Use
         User.login();
     } else {
         User.refreshSummary();
+        Users.refreshData();
     }
 });
 
@@ -236,22 +241,24 @@ app.controller("HistoryController", function($scope, $http, $routeParams, Settin
     };
 });
 
-app.controller("ProfileController", function($scope, $http, $routeParams, $location, User) {
+app.controller("ProfileController", function($scope, $http, $location, User) {
     if (!User.loggedIn) {
         User.login();
     }
 
-    $scope.user = {
-        id: User.id,
-        email: User.email,
-        nickname: User.nickname
-    };
-    $scope.$on('loginSuccess', function() {
+    function updateUserOnPage() {
         $scope.user = {
             id: User.id,
             email: User.email,
-            nickname: User.nickname
+            nickname: User.nickname,
+            loggedIn: User.loggedIn,
+            logout: User.logout
         };
+    }
+
+    updateUserOnPage();
+    $scope.$on('loginSuccess', function() {
+        updateUserOnPage();
     });
 
     $scope.updateProfile = function() {
@@ -263,6 +270,38 @@ app.controller("ProfileController", function($scope, $http, $routeParams, $locat
                     User.id = data.id;
                     User.nickname = data.nickname;
                     User.email = data.email;
+                    $location.path('/');
+                } else {
+                    alert('error: '. data);
+                }
+            });
+        }
+    };
+});
+
+app.controller("ChangePasswordController", function($scope, $http, $routeParams, $location, User) {
+    if (User.loggedIn) {
+        $location.path('/');
+    }
+    $scope.token = $routeParams.token;
+
+    $http.get('/v1/decodeToken/' + $routeParams.token).success(function (data, status) {
+        if (status == 200) {
+            $scope.user = {};
+            $scope.user.id = data.id;
+            $scope.user.nickname = data.nickname;
+            $scope.user.email = data.email;
+        } else {
+            alert('error: '. data);
+        }
+    });
+
+    $scope.updateProfile = function() {
+        if (!$scope.profileForm.$valid) {
+            alert('Пожалуйста исправьте ошибки и попробуйте заново');
+        } else {
+            $http.post('/v1/updateProfile/' + $routeParams.token, $scope.user).success(function (data, status) {
+                if (status == 200) {
                     $location.path('/');
                 } else {
                     alert('error: '. data);

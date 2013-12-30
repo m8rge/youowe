@@ -20,7 +20,7 @@ $app->add(
     new \Slim\Middleware\SessionCookie(array(
         'httponly' => true,
         'expires' => 0,
-        'secret' => ':j58<.\':T%4~=#l',
+        'secret' => $params['cookieSecret'],
     ))
 );
 /**
