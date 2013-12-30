@@ -36,7 +36,7 @@ $app->notFound(
 $app->hook(
     'slim.before',
     function () use ($app) {
-        if (in_array($_SERVER['REQUEST_METHOD'], ['POST', 'PUT'])) {
+        if (in_array($_SERVER['REQUEST_METHOD'], array('POST', 'PUT'))) {
             $postBody = file_get_contents('php://input');
             $_POST = json_decode($postBody, true);
         }
