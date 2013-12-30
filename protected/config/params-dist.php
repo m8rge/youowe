@@ -17,4 +17,6 @@ return array(
     'projectHost' => '',
     'cryptSecret' => '',
     'cookieSecret' => '',
+
+    'sentryDsn' => '',
 );

@@ -10,6 +10,13 @@ include_once(__DIR__ . '/components/EmailNotifyHelper.php');
 include_once(__DIR__ . '/components/ItsDangerous.php');
 include_once(__DIR__ . '/helpers/token.php');
 
+// setup raven
+$client = new Raven_Client($params['sentryDsn']);
+$error_handler = new Raven_ErrorHandler($client);
+$error_handler->registerExceptionHandler();
+$error_handler->registerErrorHandler();
+$error_handler->registerShutdownFunction();
+
 // setup orm
 $capsule = new Capsule;
 $capsule->addConnection($params['db']);

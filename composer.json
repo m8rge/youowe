@@ -3,6 +3,7 @@
         "slim/slim": "2.2",
         "illuminate/database": "~4.0.5",
         "ircmaxell/password-compat": "~1.0.3",
-        "m8rge/alternative-mail": "dev-master"
+        "m8rge/alternative-mail": "dev-master",
+        "raven/raven": "~0.8.0"
     }
 }
