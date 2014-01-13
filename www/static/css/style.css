@@ -247,9 +247,9 @@ li .big,
 li .normal {
     font-weight: 500;
     height: 31px;
-    text-overflow: clip;
-    /*display: inline-block;*/
-    width: 214px;
+    text-overflow: ellipsis;
+    display: inline-block;
+    max-width: 218px;
     overflow: hidden;
     white-space: nowrap;
 }
@@ -264,7 +264,7 @@ li .gave {
 }
 li .light {
     color: rgb(111, 111, 116);
-    /*display: inline-block;*/
+    display: inline-block;
     width: 56px;
     text-align: right;
     overflow: hidden;
