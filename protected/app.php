@@ -19,7 +19,7 @@ include_once(__DIR__ . '/models/Debt.php');
 $app->add(
     new \Slim\Middleware\SessionCookie(array(
         'httponly' => true,
-        'expires' => 0,
+        'expires' => time() + 3600*24*7,
         'secret' => $params['cookieSecret'],
     ))
 );
