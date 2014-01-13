@@ -64,8 +64,10 @@ app.factory('Users', function($http) {
                 if (data.hasOwnProperty(i)) {
                     if (data[i].nickname != '') {
                         data[i].title = data[i].nickname + ' <' + data[i].email +'>';
+                        data[i].shortTitle = data[i].nickname;
                     } else {
                         data[i].title = data[i].email;
+                        data[i].shortTitle = data[i].email;
                     }
                 }
             }
