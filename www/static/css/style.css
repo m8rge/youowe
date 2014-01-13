@@ -103,7 +103,7 @@ header a {
     font-size: 17px;
     color:rgb(21, 125, 251);
     padding: 0;
-    font-weight: 300;
+    font-weight: 400;
     height: 44px;
     line-height: 44px;
     text-overflow: ellipsis !important; /* why so !important ? */

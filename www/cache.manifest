@@ -1,0 +1,24 @@
+CACHE MANIFEST
+# version 0.0.3
+
+partials/add.html
+partials/changePassword.html
+partials/history.html
+partials/login.html
+partials/main.html
+partials/profile.html
+partials/register.html
+static/img/backBtn.svg
+static/img/listArrow.svg
+static/img/nextBtn.svg
+static/img/spinner.svg
+static/css/style.css
+static/js/angular.min.js
+static/js/angular-route.min.js
+static/js/fastclick.min.js
+static/js/zepto.min.js
+static/js/components.js
+static/js/app.js
+
+NETWORK:
+http://youowe.aputilov.ru/v1/
