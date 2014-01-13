@@ -38,8 +38,11 @@ $app->post(
         }
         /** @var User $user */
         $user = User::findOrFail($userId);
+        $userAttributes = array_keys($user->getAttributes());
         foreach ($_POST as $attribute => $value) {
-            $user->setAttribute($attribute, $value);
+            if (in_array($attribute, $userAttributes)) {
+                $user->setAttribute($attribute, $value);
+            }
         }
         $user->save();
         echo $user->toJson();

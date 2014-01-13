@@ -2,9 +2,17 @@
 
 $app->post(
     "/$apiVersion/login",
-    $authenticate(),
     function () use ($app) {
-        $user = User::findOrFail($_SESSION['user']['id']);
+        if (empty($_SESSION['user'])) {
+            $user = User::where('email', '=', $_POST['email'])->first();
+            if (empty($user) || !password_verify($_POST['password'], $user['hashedPassword'])) {
+                throw new UserException('Invalid login', 401);
+            }
+
+            $_SESSION['user']['id'] = $user['id'];
+        } else {
+            $user = User::findOrFail($_SESSION['user']['id']);
+        }
         echo $user->toJson();
     }
 );

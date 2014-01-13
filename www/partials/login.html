@@ -1,16 +1,13 @@
 <section>
     <header>
         <h1>You owe</h1>
-        <button class="right" ng-click="userModel.loginPage()">Войти</button>
+        <button class="right" ng-click="userModel.registerPage()">Регистрация</button>
     </header>
     <div class="scroll">
         <div class="content">
-            <form name="registerForm" ng-submit="register()">
-                <h2>Регистрация</h2>
+            <form name="loginForm" ng-submit="login()">
+                <h2>Войти</h2>
                 <ul>
-                    <li>
-                        <input ng-model="user.nickname" required type="text" placeholder="Nickname" value="">
-                    </li>
                     <li>
                         <input ng-model="user.email" required type="email" placeholder="E-mail" value="">
                     </li>
@@ -18,7 +15,7 @@
                         <input ng-model="user.password" required type="password" value="" placeholder="Пароль">
                     </li>
                     <li>
-                        <input type="submit" value="Зарегистрироваться"/>
+                        <input type="submit" value="Войти"/>
                     </li>
                 </ul>
             </form>

@@ -28,18 +28,9 @@ $app->add(
  */
 $authenticate = function() use ($app) {
     return function () use ($app) {
-        $username = $app->request()->headers('PHP_AUTH_USER');
-        $password = $app->request()->headers('PHP_AUTH_PW');
-        if (empty($username) && empty($password) && empty($_SESSION['user'])) {
-            $app->response()->header('WWW-Authenticate', 'Basic realm="You must authenticate"');
+        if (empty($_SESSION['user'])) {
             throw new HttpException(401);
         }
-        $user = User::where('email', '=', $username)->first();
-        if (empty($user) || !password_verify($password, $user['hashedPassword'])) {
-            $app->response()->header('WWW-Authenticate', 'Basic realm="You must authenticate"');
-            throw new UserException('Invalid login', 401);
-        }
-        $_SESSION['user']['id'] = $user['id'];
     };
 };
 $requiredPostFields = function ($fields) {

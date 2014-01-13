@@ -10,6 +10,10 @@ app.config(function ($routeProvider) {
             templateUrl: 'partials/register.html',
             controller: 'RegisterController'
         }).
+        when('/login', {
+            templateUrl: 'partials/login.html',
+            controller: 'LoginController'
+        }).
         when('/add', {
             templateUrl: 'partials/add.html',
             controller: 'AddDebtController'
@@ -49,7 +53,7 @@ app.factory('HistoryData', function() {
     return historyData;
 });
 
-app.factory('Users', function($http, $rootScope, $location) {
+app.factory('Users', function($http) {
     var users = {
         list: {}
     };
@@ -66,8 +70,8 @@ app.factory('Users', function($http, $rootScope, $location) {
                 }
             }
             users.list = data;
-        }).error(function () {
-            $location.path('/register');
+//        }).error(function () {
+//            User.register();
         });
     };
 
@@ -104,17 +108,43 @@ app.factory('User', function ($http, $rootScope, $location, Users, HistoryData) 
         return Object.keys(this.youOwe).length == 0;
     };
 
+    user.mainPage = function() {
+        $location.path('/');
+    };
+
+    user.registerPage = function() {
+        $location.path('/register');
+    };
+
     user.refreshSummary = function() {
         $http.get('/v1/debts/summary.json').success(function (data) {
             user.oweYou = data.youGave;
             user.youOwe = data.youTook;
-        }).error(function () {
-            nullSession();
-            $location.path('/register');
+//        }).error(function () {
+//            nullSession();
+//            user.login();
         });
     };
 
-    user.login = function () {
+    user.loginPage = function () {
+//        $http.post('/v1/login').success(function (data) {
+//            user.id = data.id;
+//            user.nickname = data.nickname;
+//            user.email = data.email;
+//            user.loggedIn = true;
+//            user.refreshSummary();
+//            Users.refreshData();
+//            $rootScope.$broadcast('loginSuccess');
+//        }).error(function (data, status) {
+//            if (status == 401) {
+                $location.path('/login');
+//            } else {
+//                alert('error: ' + data);
+//            }
+//        });
+    };
+
+    user.loginFromCookie = function() {
         $http.post('/v1/login').success(function (data) {
             user.id = data.id;
             user.nickname = data.nickname;
@@ -124,19 +154,21 @@ app.factory('User', function ($http, $rootScope, $location, Users, HistoryData) 
             Users.refreshData();
             $rootScope.$broadcast('loginSuccess');
         }).error(function () {
-            $location.path('/register');
+            $rootScope.$broadcast('loginFail');
         });
     };
 
     user.logout = function () {
         nullSession();
 
-        $http.post($location.protocol() + '://::@' + $location.host() + ':' + $location.port() + '/v1/logout').success(function () {
-            user.login();
-        }).error(function () {
-            $location.path('/register');
+        $http.post('/v1/logout').success(function () {
+            $location.path('/login'); //todo: check following error function
+//        }).error(function () {
+//            $location.path('/register');
         });
     };
+
+    user.loginFromCookie();
 
     return user;
 });
@@ -144,21 +176,35 @@ app.factory('User', function ($http, $rootScope, $location, Users, HistoryData) 
 /****************
  * CONTROLLERS
  */
-app.controller("AppController", function ($scope, $window, $location, Users, User, Settings) {
+app.controller("AppController", function ($scope, $window, Users, User, Settings) {
     $scope.settings = Settings;
     $scope.user = User;
     $scope.users = Users;
 
     if (!User.loggedIn) {
-        User.login();
+        User.loginFromCookie();
+        $scope.$on('loginSuccess', function() {
+            init();
+        });
+        $scope.$on('loginFail', function() {
+            User.loginPage();
+        });
     } else {
+        init();
+    }
+
+    function init() {
         User.refreshSummary();
         Users.refreshData();
     }
 });
 
-app.controller("RegisterController", function ($scope, $http, $location, User) {
-    $scope.user = User;
+app.controller("RegisterController", function ($scope, $http, User) {
+    if (User.loggedIn) {
+        User.mainPage();
+    }
+
+    $scope.userModel = User;
 
     $scope.register = function () {
         if (!$scope.registerForm.$valid) {
@@ -167,6 +213,7 @@ app.controller("RegisterController", function ($scope, $http, $location, User) {
             $http.post('v1/users', $scope.user).success(function (data, status) {
                 if (status == 201) {
                     alert('Теперь Вы можете войти под своими реквизитами');
+                    User.loginPage();
                 } else {
                     alert('error: '. data);
                 }
@@ -175,13 +222,44 @@ app.controller("RegisterController", function ($scope, $http, $location, User) {
     };
 
     $scope.$on('loginSuccess', function() {
-        $location.path('/');
+        User.mainPage();
     });
 });
 
-app.controller("AddDebtController", function($scope, $http, $location, Settings, User, Users) {
+app.controller("LoginController", function ($scope, $http, User, Users, $rootScope) {
+    if (User.loggedIn) {
+        User.mainPage();
+    }
+
+    $scope.userModel = User;
+
+    $scope.login = function () {
+        if (!$scope.loginForm.$valid) {
+            alert('Пожалуйста исправьте ошибки и попробуйте войти заново');
+        } else {
+            $http.post('/v1/login', $scope.user).success(function (data) {
+                User.id = data.id;
+                User.nickname = data.nickname;
+                User.email = data.email;
+                User.loggedIn = true;
+                User.refreshSummary();
+                Users.refreshData();
+                User.mainPage();
+            }).error(function (data, status) {
+                if (status == 401) {
+                    alert('Не удалось войти');
+                }
+            });
+        }
+    };
+});
+
+app.controller("AddDebtController", function($scope, $http, Settings, User, Users) {
     if (!User.loggedIn) {
-        User.login();
+        User.loginFromCookie();
+        $scope.$on('loginFail', function() {
+            User.loginPage();
+        });
     }
 
     $scope.settings = Settings;
@@ -193,7 +271,7 @@ app.controller("AddDebtController", function($scope, $http, $location, Settings,
         } else {
             $http.post('/v1/debts', $scope.newDebt).success(function (data, status) {
                 if (status == 201) {
-                    $location.path('/');
+                    User.mainPage();
                 } else {
                     alert('error: '. data);
                 }
@@ -204,7 +282,31 @@ app.controller("AddDebtController", function($scope, $http, $location, Settings,
 
 app.controller("HistoryController", function($scope, $http, $routeParams, Settings, User, Users, HistoryData) {
     if (!User.loggedIn) {
-        User.login();
+        User.loginFromCookie();
+        $scope.$on('loginSuccess', function() {
+            init();
+        });
+        $scope.$on('loginFail', function() {
+            User.loginPage();
+        });
+    } else {
+        init();
+    }
+
+    function init() {
+        $http.get('/v1/debts/history/'+$routeParams.userId+'.json').success(function (data) {
+            HistoryData.list[$routeParams.userId] = [];
+            for (var i in data) {
+                if (data.hasOwnProperty(i)) {
+                    HistoryData.list[$routeParams.userId].push({
+                        direction: data[i].sourceUserId == $routeParams.userId ? 'gave' : 'took',
+                        date: new Date(data[i].createdDate*1000),
+                        sum: (data[i].sourceUserId == $routeParams.userId ? '+' : '-') + data[i].sum
+                    });
+                }
+            }
+            $scope.history = HistoryData.list[$routeParams.userId]
+        });
     }
 
     $scope.settings = Settings;
@@ -215,20 +317,6 @@ app.controller("HistoryController", function($scope, $http, $routeParams, Settin
     } else {
         $scope.history = [];
     }
-
-    $http.get('/v1/debts/history/'+$routeParams.userId+'.json').success(function (data) {
-        HistoryData.list[$routeParams.userId] = [];
-        for (var i in data) {
-            if (data.hasOwnProperty(i)) {
-                HistoryData.list[$routeParams.userId].push({
-                    direction: data[i].sourceUserId == $routeParams.userId ? 'gave' : 'took',
-                    date: new Date(data[i].createdDate*1000),
-                    sum: (data[i].sourceUserId == $routeParams.userId ? '+' : '-') + data[i].sum
-                });
-            }
-        }
-        $scope.history = HistoryData.list[$routeParams.userId]
-    });
 
     $scope.remind = function () {
         $http.post('/v1/notify/'+$routeParams.userId).success(function (data, status) {
@@ -245,25 +333,28 @@ app.controller("HistoryController", function($scope, $http, $routeParams, Settin
     }
 });
 
-app.controller("ProfileController", function($scope, $http, $location, User) {
+app.controller("ProfileController", function($scope, $http, User) {
     if (!User.loggedIn) {
-        User.login();
+        User.loginFromCookie();
+        $scope.$on('loginSuccess', function() {
+            init();
+        });
+        $scope.$on('loginFail', function() {
+            User.loginPage();
+        });
+    } else {
+        init();
     }
 
-    function updateUserOnPage() {
+    function init() {
         $scope.user = {
             id: User.id,
             email: User.email,
-            nickname: User.nickname,
-            loggedIn: User.loggedIn,
-            logout: User.logout
+            nickname: User.nickname
         };
     }
 
-    updateUserOnPage();
-    $scope.$on('loginSuccess', function() {
-        $location.path('/');
-    });
+    $scope.userModel = User;
 
     $scope.updateProfile = function() {
         if (!$scope.profileForm.$valid) {
@@ -274,7 +365,7 @@ app.controller("ProfileController", function($scope, $http, $location, User) {
                     User.id = data.id;
                     User.nickname = data.nickname;
                     User.email = data.email;
-                    $location.path('/');
+                    User.mainPage();
                 } else {
                     alert('error: '. data);
                 }
@@ -283,22 +374,27 @@ app.controller("ProfileController", function($scope, $http, $location, User) {
     };
 });
 
-app.controller("ChangePasswordController", function($scope, $http, $routeParams, $location, User) {
+app.controller("ChangePasswordController", function($scope, $http, $routeParams, User) {
     if (User.loggedIn) {
-        $location.path('/');
+        User.mainPage();
+    } else {
+        init();
     }
-    $scope.token = $routeParams.token;
 
-    $http.get('/v1/decodeToken/' + $routeParams.token).success(function (data, status) {
-        if (status == 200) {
-            $scope.user = {};
-            $scope.user.id = data.id;
-            $scope.user.nickname = data.nickname;
-            $scope.user.email = data.email;
-        } else {
-            alert('error: '. data);
-        }
-    });
+    function init() {
+        $http.get('/v1/decodeToken/' + $routeParams.token).success(function (data, status) {
+            if (status == 200) {
+                $scope.user = {};
+                $scope.user.id = data.id;
+                $scope.user.nickname = data.nickname;
+                $scope.user.email = data.email;
+            } else {
+                alert('error: '. data);
+            }
+        });
+    }
+
+    $scope.token = $routeParams.token;
 
     $scope.updateProfile = function() {
         if (!$scope.profileForm.$valid) {
@@ -306,7 +402,7 @@ app.controller("ChangePasswordController", function($scope, $http, $routeParams,
         } else {
             $http.post('/v1/updateProfile/' + $routeParams.token, $scope.user).success(function (data, status) {
                 if (status == 200) {
-                    $location.path('/');
+                    User.mainPage();
                 } else {
                     alert('error: '. data);
                 }
