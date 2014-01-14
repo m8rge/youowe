@@ -90,6 +90,7 @@ $app->post(
                 'sourceUserId' => $_SESSION['user']['id'],
                 'destUserId' => $destUser->id,
                 'sum' => $_POST['sum'],
+                'description' => $_POST['description'],
             )
         );
 
@@ -124,7 +125,7 @@ $app->get(
             ->where('sourceUserId', '=', $_SESSION['user']['id'], 'or')
             ->where('destUserId', '=', $id)
             ->orderBy('createdDate', 'desc')
-            ->get(array('destUserId', 'sourceUserId', 'sum', new Expression('UNIX_TIMESTAMP(createdDate) as createdDate')));
+            ->get(array('destUserId', 'sourceUserId', 'description', 'sum', new Expression('UNIX_TIMESTAMP(createdDate) as createdDate')));
 
         echo json_encode(
             $history,

@@ -302,6 +302,7 @@ app.controller("HistoryController", function($scope, $http, $routeParams, Settin
                     HistoryData.list[$routeParams.userId].push({
                         direction: data[i].sourceUserId == $routeParams.userId ? 'gave' : 'took',
                         date: new Date(data[i].createdDate*1000),
+                        description: data[i].description,
                         sum: (data[i].sourceUserId == $routeParams.userId ? '+' : '-') + data[i].sum
                     });
                 }

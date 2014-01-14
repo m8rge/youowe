@@ -394,3 +394,6 @@ ul {
 input.ng-invalid-required::-webkit-input-placeholder {
     color: rgb(218, 111, 111);
 }
+.black {
+    color: black;
+}
