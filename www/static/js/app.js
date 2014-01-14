@@ -330,7 +330,7 @@ app.controller("HistoryController", function($scope, $http, $routeParams, Settin
     };
 
     $scope.displayReminderButton = function() {
-        return typeof(User.youOwe) === 'undefined' ? false : typeof(User.youOwe[ $routeParams.userId ]) === 'undefined';
+        return typeof(User.oweYou) !== 'undefined' && typeof(User.oweYou[ $routeParams.userId ]) !== 'undefined';
     }
 });
 
