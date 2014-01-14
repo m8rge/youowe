@@ -264,16 +264,17 @@ li .gave {
 }
 li .light {
     color: rgb(111, 111, 116);
-    display: inline-block;
-    width: 56px;
+    /* display: inline-block; */
+    /* width: 56px; */
     text-align: right;
-    overflow: hidden;
+    /* overflow: hidden; */
+    /* height: 31px; */
+    float: right;
+    margin-right: 5px;
 }
 .arrowed .innerLi {
-    background-image: url(../img/listArrow.svg);
-    background-size: 15px 15px;
-    background-repeat: no-repeat;
-    background-position: 300px center;
+    background: url(../img/listArrow.svg) no-repeat right center;
+    background-size: 20px 15px;
     display: block;
     margin: -6px -15px;
     padding: 6px 15px;
