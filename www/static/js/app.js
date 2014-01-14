@@ -94,6 +94,7 @@ app.factory('User', function ($http, $rootScope, $location, Users, HistoryData) 
         user.email = null;
         user.oweYou = {};
         user.youOwe = {};
+        user.even = {};
     }
     function nullSession() {
         Users.clearData();
@@ -110,6 +111,10 @@ app.factory('User', function ($http, $rootScope, $location, Users, HistoryData) 
         return Object.keys(this.youOwe).length == 0;
     };
 
+    user.emptyEven = function() {
+        return Object.keys(this.even).length == 0;
+    };
+
     user.mainPage = function() {
         $location.path('/');
     };
@@ -122,6 +127,7 @@ app.factory('User', function ($http, $rootScope, $location, Users, HistoryData) 
         $http.get('/v1/debts/summary.json').success(function (data) {
             user.oweYou = data.youGave;
             user.youOwe = data.youTook;
+            user.even = data.even;
 //        }).error(function () {
 //            nullSession();
 //            user.login();
@@ -185,17 +191,10 @@ app.controller("AppController", function ($scope, $window, Users, User, Settings
 
     if (!User.loggedIn) {
         User.loginFromCookie();
-        $scope.$on('loginSuccess', function() {
-            init();
-        });
         $scope.$on('loginFail', function() {
             User.loginPage();
         });
     } else {
-        init();
-    }
-
-    function init() {
         User.refreshSummary();
         Users.refreshData();
     }

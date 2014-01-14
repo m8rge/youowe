@@ -12,7 +12,7 @@ $app->get(
             ->get(array(new Expression('sourceUserId as userId'), new Expression('sum(`sum`) as `sum`')));
         $youTookSums = array();
         foreach ($youTook as $user) {
-            $youTookSums[$user['userId']] = $user['sum'];
+            $youTookSums[$user['userId']] = (int)$user['sum'];
         }
 
         $youGave = Debt::query()->getQuery()
@@ -24,14 +24,19 @@ $app->get(
             $youGaveSums[$user['userId']] = (int)$user['sum'];
         }
 
+        $evenUsers = array();
         foreach ($youTookSums as $userId => $sum) {
             if (!empty($youGaveSums[$userId])) {
                 if ($sum - $youGaveSums[$userId] > 0) {
                     $youTookSums[$userId] -= $youGaveSums[$userId];
                     unset($youGaveSums[$userId]);
-                } else {
+                } elseif ($sum - $youGaveSums[$userId] < 0) {
                     $youGaveSums[$userId] -= $youTookSums[$userId];
                     unset($youTookSums[$userId]);
+                } else {
+                    $evenUsers[$userId] = 0;
+                    unset($youTookSums[$userId]);
+                    unset($youGaveSums[$userId]);
                 }
             }
         }
@@ -40,6 +45,7 @@ $app->get(
             array(
                 'youTook' => $youTookSums,
                 'youGave' => $youGaveSums,
+                'even' => $evenUsers,
             ),
             JSON_FORCE_OBJECT
         );

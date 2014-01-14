@@ -49,7 +49,7 @@ angular
                         if (errorResponse.data.error) {
                             alert('Ошибка: ' + errorResponse.data.error);
                         } else {
-                            alert('Ошибка на сервере с кодом ' + errorResponse.status);
+                            alert('При запросе ресурса (' + errorResponse.config.method + ')' + errorResponse.config.url +' произошла ошибка на сервере с кодом ' + errorResponse.status);
                         }
                     }
                     return $q.reject(errorResponse);
