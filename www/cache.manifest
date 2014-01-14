@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# version 0.0.4
+# version 0.0.5
 
 partials/add.html
 partials/changePassword.html
@@ -21,4 +21,4 @@ static/js/components.js
 static/js/app.js
 
 NETWORK:
-http://youowe.aputilov.ru/v1/
+*
