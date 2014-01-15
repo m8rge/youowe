@@ -14,12 +14,26 @@
     <!--<script src="static/js/ios.js"></script>-->
     <script src="static/js/angular.min.js"></script>
     <script src="static/js/angular-route.min.js"></script>
+    <!--<script src="static/js/zepto.touchSwipe.min.js"></script>-->
     <script src="static/js/components.js"></script>
     <script src="static/js/app.js"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             FastClick.attach(document.body);
         });
+        if ('applicationCache' in window) {
+            function updateReady() {
+                window.applicationCache.swapCache();
+                if (confirm('Доступна новая версия. Обновить страницу?')) {
+                    window.location.reload();
+                }
+            }
+
+            window.applicationCache.addEventListener('updateready', updateReady);
+            if (window.applicationCache.status === window.applicationCache.UPDATEREADY) {
+                updateReady();
+            }
+        }
     </script>
 </head>
 <body class="ios7">
