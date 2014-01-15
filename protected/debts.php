@@ -102,6 +102,7 @@ $app->post(
             $destUser->email,
             $me->getTitle(),
             $_POST['sum'],
+            $_POST['description'],
             $params['projectHost'],
             $changePasswordToken
         );
@@ -158,7 +159,14 @@ $app->post(
         $me = User::findOrFail($_SESSION['user']['id']);
         /** @var User $destUser */
         $destUser = User::findOrFail($userId);
-        $sent = EmailNotifyHelper::debtNotify($params['emailFrom'], $params['projectName'], $destUser->email, $me->getTitle(), $sum);
+        $sent = EmailNotifyHelper::debtNotify(
+            $params['emailFrom'],
+            $params['projectName'],
+            $destUser->email,
+            $me->getTitle(),
+            $sum,
+            $params['projectHost']
+        );
 
         if (!$sent) {
             throw new Exception('notify-emailSentFailed');

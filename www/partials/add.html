@@ -11,7 +11,7 @@
                     <ul>
                         <li ng-hide="newDebt.destUserId == 'addNew'">
                             <select ng-model="newDebt.destUserId">
-                                <option value="">Выберите должника</option>
+                                <option value="">Выберите человека</option>
                                 <optgroup label="Существующие">
                                     <option value="{{ userId }}" ng-repeat="(userId, user) in users.list">{{ user.shortTitle }}</option>
                                 </optgroup>
@@ -23,7 +23,7 @@
                         </li>
                         <li><input ng-model="newDebt.sum" required type="number" value="" placeholder="Сумма, {{ settings.currency }}"></li>
                         <li><input ng-model="newDebt.description" type="text" value="" placeholder="Описание"></li>
-                        <li><input type="submit" value="Добавить должника"/></li>
+                        <li><input type="submit" value="Дать денег"/></li>
                     </ul>
                 </form>
             </div>
