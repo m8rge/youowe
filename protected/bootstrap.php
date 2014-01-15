@@ -1,5 +1,6 @@
 <?php
 
+date_default_timezone_set('UTC');
 require(__DIR__ . '/../vendor/autoload.php');
 
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -21,6 +22,8 @@ $error_handler->registerShutdownFunction();
 $capsule = new Capsule;
 $capsule->addConnection($params['db']);
 $capsule->bootEloquent();
+$capsule->setAsGlobal();
+Capsule::statement('SET time_zone="+00:00"');
 
 $_SERVER['SCRIPT_NAME'] = 'index.php';
 $app = new \Slim\Slim(array(
