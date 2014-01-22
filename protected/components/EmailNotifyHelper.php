@@ -26,6 +26,18 @@ Email: {$to}
         return $mail->send();
     }
 
+    public static function passwordReset($from, $fromName, $to, $projectHost, $changePasswordToken)
+    {
+        $changePasswordToken = urlencode($changePasswordToken);
+
+        $mail = new AlternativeMail();
+        $mail->addTo($to)
+            ->setFrom($from, $fromName)
+            ->setSubject("Сброс пароля для Youowe")
+            ->setTextBody("Новый пароль Вы можете установить по ссылке http://{$projectHost}/#/changePassword/$changePasswordToken" . self::getFooter($projectHost));
+        return $mail->send();
+    }
+
     public static function debtNotify($from, $fromName, $to, $sourceUserTitle, $sum, $projectHost)
     {
         $mail = new AlternativeMail();
