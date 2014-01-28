@@ -31,14 +31,14 @@ $app->post(
 $app->post(
     "/$apiVersion/users/:userId",
     $authenticate(),
-    $requiredPostFields(array('nickname', 'email', 'nickname')),
+    $requiredPostFields(array('nickname', 'email')),
     function ($userId) use ($app) {
         if ($_SESSION['user']['id'] != $userId) {
             throw new HttpException(403);
         }
         /** @var User $user */
         $user = User::findOrFail($userId);
-        $userAttributes = array_keys($user->getAttributes());
+        $userAttributes = $user->getFillable();
         foreach ($_POST as $attribute => $value) {
             if (in_array($attribute, $userAttributes)) {
                 $user->setAttribute($attribute, $value);
@@ -54,8 +54,11 @@ $app->post(
     $requiredPostFields(array('nickname', 'email', 'password')),
     function ($token) use ($app, $params) {
         $user = decodeToken($token);
+        $userAttributes = $user->getFillable();
         foreach ($_POST as $attribute => $value) {
-            $user->setAttribute($attribute, $value);
+            if (in_array($attribute, $userAttributes)) {
+                $user->setAttribute($attribute, $value);
+            }
         }
         $user->save();
         echo $user->toJson();
