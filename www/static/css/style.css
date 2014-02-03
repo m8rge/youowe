@@ -69,15 +69,15 @@ section {
 
 .spinner {
     background: url(../img/spinner.svg) 0 0 no-repeat;
-    background-size: 32px;
+    background-size: 21px;
     width: 22px;
-    height: 21px;
+    height: 17px;
     display: inline-block;
-    vertical-align: text-top;
+    vertical-align: middle;
 }
 header > .spinner {
     left: 10px;
-    top: 11px;
+    top: 14px;
     display: block;
     position: absolute;
 }
