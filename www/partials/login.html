@@ -6,7 +6,7 @@
     <div class="scroll">
         <div class="content">
             <form name="loginForm" ng-submit="login()">
-                <h2>Войти</h2>
+                <h2>Войти <div class="spinner" ng-show="userModel.loginState"></div></h2>
                 <ul>
                     <li>
                         <input ng-model="user.email" required type="email" placeholder="E-mail" value="">

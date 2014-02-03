@@ -37,28 +37,33 @@ app.config(function ($routeProvider) {
 
 app.factory('Settings', function(){
     return {
-        currency: 'р.'
+        currency: 'р.',
+        ajaxSpinnerTimeout: 2000
     }
 });
 
 app.factory('HistoryData', function() {
     var historyData = {
-        list: {}
+        list: {},
+        loadingState: false
     };
 
     historyData.clearData = function() {
         this.list = {};
+        this.loadingState = false;
     };
 
     return historyData;
 });
 
-app.factory('Users', function($http) {
+app.factory('Users', function($http, $timeout, Settings) {
     var users = {
-        list: {}
+        list: {},
+        loadingState: false
     };
 
     users.refreshData = function() {
+        var loadingPromise = $timeout(function() {users.loadingState = true;}, Settings.ajaxSpinnerTimeout);
         $http.get('/v1/users.json').success(function (data) {
             for (var i in data) {
                 if (data.hasOwnProperty(i)) {
@@ -74,6 +79,9 @@ app.factory('Users', function($http) {
             users.list = data;
 //        }).error(function () {
 //            User.register();
+        }).then(function () {
+            $timeout.cancel(loadingPromise);
+            users.loadingState = false;
         });
     };
 
@@ -84,7 +92,7 @@ app.factory('Users', function($http) {
     return users;
 });
 
-app.factory('User', function ($http, $rootScope, $location, Users, HistoryData) {
+app.factory('User', function ($http, $rootScope, $location, $timeout, Users, HistoryData, Settings) {
     var user = {};
 
     function nullUser() {
@@ -95,6 +103,8 @@ app.factory('User', function ($http, $rootScope, $location, Users, HistoryData) 
         user.oweYou = {};
         user.youOwe = {};
         user.even = {};
+        user.loadingState = false;
+        user.loginState = false;
     }
     function nullSession() {
         Users.clearData();
@@ -124,6 +134,7 @@ app.factory('User', function ($http, $rootScope, $location, Users, HistoryData) 
     };
 
     user.refreshSummary = function() {
+        var loadingPromise = $timeout(function() {user.loadingState = true;}, Settings.ajaxSpinnerTimeout);
         $http.get('/v1/debts/summary.json').success(function (data) {
             user.oweYou = data.youGave;
             user.youOwe = data.youTook;
@@ -131,28 +142,18 @@ app.factory('User', function ($http, $rootScope, $location, Users, HistoryData) 
 //        }).error(function () {
 //            nullSession();
 //            user.login();
+        }).then(function() {
+            $timeout.cancel(loadingPromise);
+            user.loadingState = false;
         });
     };
 
     user.loginPage = function () {
-//        $http.post('/v1/login').success(function (data) {
-//            user.id = data.id;
-//            user.nickname = data.nickname;
-//            user.email = data.email;
-//            user.loggedIn = true;
-//            user.refreshSummary();
-//            Users.refreshData();
-//            $rootScope.$broadcast('loginSuccess');
-//        }).error(function (data, status) {
-//            if (status == 401) {
-                $location.path('/login');
-//            } else {
-//                alert('error: ' + data);
-//            }
-//        });
+        $location.path('/login');
     };
 
     user.loginFromCookie = function() {
+        var loadingPromise = $timeout(function() {user.loginState = true;}, Settings.ajaxSpinnerTimeout);
         $http.post('/v1/login').success(function (data) {
             user.id = data.id;
             user.nickname = data.nickname;
@@ -163,6 +164,10 @@ app.factory('User', function ($http, $rootScope, $location, Users, HistoryData) 
             $rootScope.$broadcast('loginSuccess');
         }).error(function () {
             $rootScope.$broadcast('loginFail');
+            user.loginState = false;
+        }).then(function() {
+            $timeout.cancel(loadingPromise);
+            user.loginState = false;
         });
     };
 
@@ -227,7 +232,7 @@ app.controller("RegisterController", function ($scope, $http, User) {
     });
 });
 
-app.controller("LoginController", function ($scope, $http, User, Users, $rootScope) {
+app.controller("LoginController", function ($scope, $http, $timeout, User, Users, Settings) {
     if (User.loggedIn) {
         User.mainPage();
     }
@@ -238,6 +243,7 @@ app.controller("LoginController", function ($scope, $http, User, Users, $rootSco
         if (!$scope.loginForm.$valid) {
             alert('Пожалуйста исправьте ошибки и попробуйте войти заново');
         } else {
+            var loadingPromise = $timeout(function() {User.loginState = true;}, Settings.ajaxSpinnerTimeout);
             $http.post('/v1/login', $scope.user).success(function (data) {
                 User.id = data.id;
                 User.nickname = data.nickname;
@@ -247,9 +253,13 @@ app.controller("LoginController", function ($scope, $http, User, Users, $rootSco
                 Users.refreshData();
                 User.mainPage();
             }).error(function (data, status) {
+                User.loginState = false;
                 if (status == 401) {
                     alert('Не удалось войти');
                 }
+            }).then(function() {
+                $timeout.cancel(loadingPromise);
+                User.loginState = false;
             });
         }
     };
@@ -281,7 +291,7 @@ app.controller("AddDebtController", function($scope, $http, Settings, User, User
     };
 });
 
-app.controller("HistoryController", function($scope, $http, $routeParams, Settings, User, Users, HistoryData) {
+app.controller("HistoryController", function($scope, $http, $routeParams, $timeout, Settings, User, Users, HistoryData) {
     if (!User.loggedIn) {
         User.loginFromCookie();
         $scope.$on('loginSuccess', function() {
@@ -295,6 +305,7 @@ app.controller("HistoryController", function($scope, $http, $routeParams, Settin
     }
 
     function init() {
+        var loadingPromise = $timeout(function() {HistoryData.loadingState = true;}, Settings.ajaxSpinnerTimeout);
         $http.get('/v1/debts/history/'+$routeParams.userId+'.json').success(function (data) {
             HistoryData.list[$routeParams.userId] = [];
             for (var i in data) {
@@ -308,10 +319,15 @@ app.controller("HistoryController", function($scope, $http, $routeParams, Settin
                 }
             }
             $scope.history = HistoryData.list[$routeParams.userId]
+        }).then(function() {
+            $timeout.cancel(loadingPromise);
+            HistoryData.loadingState = false;
         });
     }
 
+    $scope.historyObject = HistoryData;
     $scope.settings = Settings;
+    $scope.user = User;
     $scope.users = Users;
     $scope.userId = $routeParams.userId;
     if (HistoryData.list[$routeParams.userId] != undefined) {

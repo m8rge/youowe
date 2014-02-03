@@ -14,7 +14,7 @@
                         </li>
                     </ul>
                 </form>
-                <h2>История</h2>
+                <h2>История <div class="spinner" ng-show="user.loginState || historyObject.loadingState"></div></h2>
                 <ul>
                     <li ng-repeat="debt in history">
                         <div class="innerLi" ng-class="debt.direction">

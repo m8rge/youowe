@@ -68,12 +68,18 @@ section {
 }
 
 .spinner {
-    background: url(../img/spinner.svg) center no-repeat;
-    -webkit-animation: rotate 1.5s infinite steps(12);
-    -moz-animation: rotate 1.5s infinite steps(12);
-    -ms-animation: rotate 1.5s infinite steps(12);
-    -o-animation: rotate 1.5s infinite steps(12);
-    animation: rotate 1.5s infinite steps(12);
+    background: url(../img/spinner.svg) 0 0 no-repeat;
+    background-size: 32px;
+    width: 22px;
+    height: 21px;
+    display: inline-block;
+    vertical-align: text-top;
+}
+header > .spinner {
+    left: 10px;
+    top: 11px;
+    display: block;
+    position: absolute;
 }
 
 header {
@@ -242,6 +248,7 @@ li {
     min-height: 44px;
     box-sizing: border-box;
     line-height: 31px;
+    position: relative;
 }
 li .big,
 li .normal {
@@ -285,6 +292,32 @@ li .light {
     -webkit-touch-callout: none;
     color: #000;
     text-decoration: none;
+}
+.innerLi {
+    position: relative;
+}
+
+.removeButton {
+    background-color: red;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 104px;
+    display: block;
+}
+.removeButton span {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    height: 31px;
+    display: block;
+    margin: auto;
+    width: 100%;
+    text-align: center;
 }
 
 h2 {
