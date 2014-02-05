@@ -50,9 +50,9 @@ Email: {$destUser->email}
         } else {
             $balance = self::getBalanceWithUser($destUser->id);
             if ($balance > 0) {
-                $append = "\nТеперь Вы должны {$sourceUserTitle} еще {$balance}р.";
+                $append = "\nТеперь Вы должны {$sourceUserTitle} {$balance}р.";
             } elseif ($balance < 0) {
-                $append = "\nТеперь {$sourceUserTitle} должен Вам еще {$balance}р.";
+                $append = "\nТеперь {$sourceUserTitle} должен Вам {$balance}р.";
             } else {
                 $append = "\nТеперь вы в расчете.";
             }
