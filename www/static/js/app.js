@@ -18,6 +18,10 @@ app.config(function ($routeProvider) {
             templateUrl: 'partials/add.html',
             controller: 'AddDebtController'
         }).
+        when('/add/:userId', {
+            templateUrl: 'partials/add.html',
+            controller: 'AddDebtController'
+        }).
         when('/profile', {
             templateUrl: 'partials/profile.html',
             controller: 'ProfileController'
@@ -164,6 +168,7 @@ app.factory('User', function ($http, $rootScope, $location, $timeout, Users, His
             $rootScope.$broadcast('loginSuccess');
         }).error(function () {
             $rootScope.$broadcast('loginFail');
+            $timeout.cancel(loadingPromise);
             user.loginState = false;
         }).then(function() {
             $timeout.cancel(loadingPromise);
@@ -265,7 +270,7 @@ app.controller("LoginController", function ($scope, $http, $timeout, User, Users
     };
 });
 
-app.controller("AddDebtController", function($scope, $http, Settings, User, Users) {
+app.controller("AddDebtController", function($scope, $http, $routeParams, Settings, User, Users) {
     if (!User.loggedIn) {
         User.loginFromCookie();
         $scope.$on('loginFail', function() {
@@ -274,7 +279,11 @@ app.controller("AddDebtController", function($scope, $http, Settings, User, User
     }
 
     $scope.settings = Settings;
-    $scope.users = Users;
+
+    $scope.newDebt = {};
+    if ($routeParams.userId) {
+        $scope.newDebt.destUserId = $routeParams.userId;
+    }
 
     $scope.addDebt = function () {
         if (!$scope.AddDebtForm.$valid) {
@@ -289,6 +298,20 @@ app.controller("AddDebtController", function($scope, $http, Settings, User, User
             });
         }
     };
+
+    $scope.getUsersList = function() {
+        var list = Users.list;
+        for (var i in list) {
+            if (list.hasOwnProperty(i)) {
+                list[i].group = 'Существующие';
+            }
+        }
+        list['addNew'] = {
+            shortTitle: 'Добавить нового'
+        };
+
+        return list;
+    }
 });
 
 app.controller("HistoryController", function($scope, $http, $routeParams, $timeout, Settings, User, Users, HistoryData) {

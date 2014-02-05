@@ -10,12 +10,8 @@
                 <form name="AddDebtForm" ng-submit="addDebt()">
                     <ul>
                         <li ng-hide="newDebt.destUserId == 'addNew'">
-                            <select ng-model="newDebt.destUserId">
+                            <select ng-model="newDebt.destUserId" ng-options="userId as user.shortTitle group by user.group for (userId, user) in getUsersList()">
                                 <option value="">Выберите человека</option>
-                                <optgroup label="Существующие">
-                                    <option value="{{ userId }}" ng-repeat="(userId, user) in users.list">{{ user.shortTitle }}</option>
-                                </optgroup>
-                                <option value="addNew">Добавить нового</option>
                             </select>
                         </li>
                         <li ng-show="newDebt.destUserId == 'addNew'">
