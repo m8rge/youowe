@@ -52,6 +52,7 @@ Email: {$destUser->email}
             if ($balance > 0) {
                 $append = "\nТеперь Вы должны {$sourceUserTitle} {$balance}р.";
             } elseif ($balance < 0) {
+                $balance = -1*$balance;
                 $append = "\nТеперь {$sourceUserTitle} должен Вам {$balance}р.";
             } else {
                 $append = "\nТеперь вы в расчете.";
