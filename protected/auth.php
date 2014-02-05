@@ -49,10 +49,8 @@ $app->post(
         );
 
         $sent = EmailNotifyHelper::passwordReset(
-            $params['emailFrom'],
-            $params['projectName'],
+            $params,
             $user->email,
-            $params['projectHost'],
             $changePasswordToken
         );
 

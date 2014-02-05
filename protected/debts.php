@@ -97,13 +97,11 @@ $app->post(
         /** @var User $me */
         $me = User::findOrFail($_SESSION['user']['id']);
         $sent = EmailNotifyHelper::newDebtNotify(
-            $params['emailFrom'],
-            $params['projectName'],
-            $destUser->email,
+            $params,
+            $destUser,
             $me->getTitle(),
             $_POST['sum'],
             $_POST['description'],
-            $params['projectHost'],
             $changePasswordToken
         );
 
@@ -160,12 +158,10 @@ $app->post(
         /** @var User $destUser */
         $destUser = User::findOrFail($userId);
         $sent = EmailNotifyHelper::debtNotify(
-            $params['emailFrom'],
-            $params['projectName'],
+            $params,
             $destUser->email,
             $me->getTitle(),
-            $sum,
-            $params['projectHost']
+            $sum
         );
 
         if (!$sent) {
