@@ -1,6 +1,7 @@
 var app = angular.module("YouOweApp", ['ngRoute', 'globalErrors']);
 
 app.config(function ($routeProvider) {
+    //noinspection JSUnresolvedFunction
     $routeProvider.
         when('/', {
             templateUrl: 'partials/main.html',
@@ -9,6 +10,10 @@ app.config(function ($routeProvider) {
         when('/register', {
             templateUrl: 'partials/register.html',
             controller: 'RegisterController'
+        }).
+        when('/resetPassword', {
+            templateUrl: 'partials/passwordReset.html',
+            controller: 'PasswordResetController'
         }).
         when('/login', {
             templateUrl: 'partials/login.html',
@@ -137,10 +142,20 @@ app.factory('User', function ($http, $rootScope, $location, $timeout, Users, His
         $location.path('/register');
     };
 
+    user.resetPasswordPage = function() {
+        $location.path('/resetPassword');
+    };
+
+    user.loginPage = function () {
+        $location.path('/login');
+    };
+
     user.refreshSummary = function() {
         var loadingPromise = $timeout(function() {user.loadingState = true;}, Settings.ajaxSpinnerTimeout);
         $http.get('/v1/debts/summary.json').success(function (data) {
+            /** @namespace data.youGave */
             user.oweYou = data.youGave;
+            /** @namespace data.youTook */
             user.youOwe = data.youTook;
             user.even = data.even;
 //        }).error(function () {
@@ -150,10 +165,6 @@ app.factory('User', function ($http, $rootScope, $location, $timeout, Users, His
             $timeout.cancel(loadingPromise);
             user.loadingState = false;
         });
-    };
-
-    user.loginPage = function () {
-        $location.path('/login');
     };
 
     user.loginFromCookie = function() {
@@ -270,6 +281,24 @@ app.controller("LoginController", function ($scope, $http, $timeout, User, Users
     };
 });
 
+app.controller("PasswordResetController", function ($scope, $http, User) {
+    if (User.loggedIn) {
+        User.mainPage();
+    }
+
+    $scope.userModel = User;
+
+    $scope.resetPassword = function () {
+        if (!$scope.resetPasswordForm.$valid) {
+            alert('Пожалуйста исправьте ошибки и попробуйте заново');
+        } else {
+            $http.post('/v1/password-reset', $scope.user).success(function () {
+                alert('E-mail сообщение отправлено успешно');
+            });
+        }
+    };
+});
+
 app.controller("AddDebtController", function($scope, $http, $routeParams, Settings, User, Users) {
     if (!User.loggedIn) {
         User.loginFromCookie();
@@ -333,6 +362,8 @@ app.controller("HistoryController", function($scope, $http, $routeParams, $timeo
             HistoryData.list[$routeParams.userId] = [];
             for (var i in data) {
                 if (data.hasOwnProperty(i)) {
+                    /** @namespace data.createdDate */
+                    /** @namespace data.sourceUserId */
                     HistoryData.list[$routeParams.userId].push({
                         direction: data[i].sourceUserId == $routeParams.userId ? 'gave' : 'took',
                         date: new Date(data[i].createdDate*1000),

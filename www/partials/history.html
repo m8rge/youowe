@@ -7,14 +7,14 @@
     <div class="scrollWrap">
         <div class="scroll">
             <div class="content">
-                    <form name="remindForm" ng-submit="remind()" ng-show="displayReminderButton()">
+                <div ng-show="displayReminderButton()">
                     <h2></h2>
                     <ul>
                         <li>
-                            <input type="submit" value="Напомнить"/>
+                            <button ng-click="remind()">Напомнить</button>
                         </li>
                     </ul>
-                </form>
+                </div>
                 <h2>История <div class="spinner" ng-show="user.loginState || historyObject.loadingState"></div></h2>
                 <ul>
                     <li ng-repeat="debt in history">
