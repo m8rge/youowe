@@ -26,8 +26,23 @@ $app->add(
 /**
  * MIDDLEWARES
  */
-$authenticate = function() use ($app) {
-    return function () use ($app) {
+$authenticate = function() use ($app, $params) {
+    return function () use ($app, $params) {
+        if (!empty($_POST['token']) && !empty($_POST['sourceUserEmail'])) {
+            if ($_POST['token'] === $params['apiKey']) {
+                $user = User::where('email', '=', $_POST['sourceUserEmail'])->first();
+                if (!empty($user)) {
+                    $_SESSION['user']['id'] = $user['id'];
+                    unset($_POST['sourceUserEmail']);
+                }
+                unset($user);
+                $user = User::where('email', '=', $_POST['destUserEmail'])->first();
+                if (!empty($user)) {
+                    $_POST['destUserId'] = $user['id'];
+                    unset($_POST['destUserEmail']);
+                }
+            }
+        }
         if (empty($_SESSION['user'])) {
             throw new HttpException(401);
         }

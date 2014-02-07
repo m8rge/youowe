@@ -18,5 +18,7 @@ return array(
     'cryptSecret' => '',
     'cookieSecret' => '',
 
+    'apiKey' => '',
+
     'sentryDsn' => '',
 );
