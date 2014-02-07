@@ -85,6 +85,9 @@ $app->post(
         } else {
             $destUser = User::findOrFail($_POST['destUserId']);
         }
+        if ($_SESSION['user']['id'] == $destUser->id) {
+            throw new UserException('newDebt-youCantOweYourself');
+        }
         $debt = Debt::create(
             array(
                 'sourceUserId' => $_SESSION['user']['id'],

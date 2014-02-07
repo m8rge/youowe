@@ -4,7 +4,7 @@ $app->get(
     "/$apiVersion/users.json",
     $authenticate(),
     function () use ($app) {
-        $users = User::where('id', '!=', $_SESSION['user']['id'])->get(array('id', 'email', 'nickname'));
+        $users = User::where('id', '!=', $_SESSION['user']['id'])->get(array('id', 'email', 'nickname', 'hipchatMentionName'));
         $result = array();
         /** @var User $user */
         foreach ($users as $user) {

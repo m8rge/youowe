@@ -108,6 +108,7 @@ app.factory('User', function ($http, $rootScope, $location, $timeout, Users, His
         user.loggedIn = false;
         user.id = null;
         user.nickname = null;
+        user.hipchatMentionName = null;
         user.email = null;
         user.oweYou = {};
         user.youOwe = {};
@@ -172,6 +173,7 @@ app.factory('User', function ($http, $rootScope, $location, $timeout, Users, His
         $http.post('/v1/login').success(function (data) {
             user.id = data.id;
             user.nickname = data.nickname;
+            user.hipchatMentionName = data.hipchatMentionName;
             user.email = data.email;
             user.loggedIn = true;
             user.refreshSummary();
@@ -263,6 +265,7 @@ app.controller("LoginController", function ($scope, $http, $timeout, User, Users
             $http.post('/v1/login', $scope.user).success(function (data) {
                 User.id = data.id;
                 User.nickname = data.nickname;
+                User.hipchatMentionName = data.hipchatMentionName;
                 User.email = data.email;
                 User.loggedIn = true;
                 User.refreshSummary();
@@ -422,7 +425,8 @@ app.controller("ProfileController", function($scope, $http, User) {
         $scope.user = {
             id: User.id,
             email: User.email,
-            nickname: User.nickname
+            nickname: User.nickname,
+            hipchatMentionName: User.hipchatMentionName
         };
     }
 
@@ -436,6 +440,7 @@ app.controller("ProfileController", function($scope, $http, User) {
                 if (status == 200) {
                     User.id = data.id;
                     User.nickname = data.nickname;
+                    User.hipchatMentionName = data.hipchatMentionName;
                     User.email = data.email;
                     User.mainPage();
                 } else {
@@ -459,6 +464,7 @@ app.controller("ChangePasswordController", function($scope, $http, $routeParams,
                 $scope.user = {};
                 $scope.user.id = data.id;
                 $scope.user.nickname = data.nickname;
+                $scope.user.hipchatMentionName = data.hipchatMentionName;
                 $scope.user.email = data.email;
             } else {
                 alert('error: '. data);

@@ -28,19 +28,23 @@ $app->add(
  */
 $authenticate = function() use ($app, $params) {
     return function () use ($app, $params) {
-        if (!empty($_POST['token']) && !empty($_POST['sourceUserEmail'])) {
+        if (!empty($_POST['token']) && !empty($_POST['sourceUserMention'])) {
             if ($_POST['token'] === $params['apiKey']) {
-                $user = User::where('email', '=', $_POST['sourceUserEmail'])->first();
+                $user = User::where('hipchatMentionName', '=', $_POST['sourceUserMention'])->first();
                 if (!empty($user)) {
                     $_SESSION['user']['id'] = $user['id'];
-                    unset($_POST['sourceUserEmail']);
+                    unset($_POST['sourceUserMention']);
+                } else {
+                    throw new UserException("source user not found", 403);
                 }
                 unset($user);
-                $user = User::where('email', '=', $_POST['destUserEmail'])->first();
+                $user = User::where('hipchatMentionName', '=', $_POST['destUserMention'])->first();
                 if (!empty($user)) {
                     $_POST['destUserId'] = $user['id'];
-                    unset($_POST['destUserEmail']);
+                    unset($_POST['destUserMention']);
                 }
+            } else {
+                throw new HttpException(403);
             }
         }
         if (empty($_SESSION['user'])) {
