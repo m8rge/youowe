@@ -20,7 +20,7 @@ $app->post(
     $requiredPostFields(array('nickname', 'email', 'password')),
     function () use ($app) {
         if (User::where('email', '=', $_POST['email'])->count()) {
-            throw new UserException('register-emailExists');
+            throw new UserException('register-emailAlreadyExists');
         }
         $user = User::create($_POST);
         $app->status(201);
@@ -41,9 +41,14 @@ $app->post(
         $userAttributes = $user->getFillable();
         foreach ($_POST as $attribute => $value) {
             if (in_array($attribute, $userAttributes)) {
+                if (empty($value)) {
+                    $value = null;
+                }
                 $user->setAttribute($attribute, $value);
             }
         }
+
+        checkForUniqueFields($user);
         $user->save();
         echo $user->toJson();
     }
@@ -60,8 +65,22 @@ $app->post(
                 $user->setAttribute($attribute, $value);
             }
         }
+
+        checkForUniqueFields($user);
         $user->save();
         echo $user->toJson();
     }
 );
 
+function checkForUniqueFields(User $user)
+{
+    $changedAttributes = $user->getDirty();
+    if (!empty($changedAttributes['hipchatMentionName']) &&
+        User::where('hipchatMentionName', '=', $changedAttributes['hipchatMentionName'])->count() == 1) {
+        throw new UserException('register-hipchatMentionNameAlreadyExists');
+    }
+    if (!empty($changedAttributes['email']) &&
+        User::where('email', '=', $changedAttributes['email'])->count() == 1) {
+        throw new UserException('register-hipchatEmailAlreadyExists');
+    }
+}
