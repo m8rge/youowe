@@ -7,7 +7,7 @@
     <div class="scrollWrap">
         <div class="scroll">
             <div class="content">
-                <h2>Вам должны <div class="spinner" ng-show="user.loadingState || users.loadingState"></div></h2>
+                <h2>Вам должны {{user.totalOweYouSum()}} <div class="spinner" ng-show="user.loadingState || users.loadingState"></div></h2>
                 <ul class="arrowed">
                     <li ng-show="user.emptyOweYou()">Никто</li>
                     <li ng-repeat="(userId, sum) in user.oweYou">
@@ -17,7 +17,7 @@
                         </a>
                     </li>
                 </ul>
-                <h2>Вы задолжали</h2>
+                <h2>Вы задолжали {{user.totalYouOweSum()}}</h2>
                 <ul class="arrowed">
                     <li ng-show="user.emptyYouOwe()">Никому</li>
                     <li ng-repeat="(userId, sum) in user.youOwe">

@@ -151,6 +151,32 @@ app.factory('User', function ($http, $rootScope, $location, $timeout, Users, His
         $location.path('/login');
     };
 
+    user.totalOweYouSum = function () {
+        var totalSum = 0;
+        for (var i in user.oweYou) {
+            if (user.oweYou.hasOwnProperty(i)) {
+                totalSum+= user.oweYou[i];
+            }
+        }
+
+        return totalSum + Settings.currency;
+    };
+
+    user.totalYouOweSum = function () {
+        var totalSum = 0;
+        for (var i in user.youOwe) {
+            if (user.youOwe.hasOwnProperty(i)) {
+                totalSum+= user.youOwe[i];
+            }
+        }
+
+        if (totalSum > 0) {
+            return totalSum + Settings.currency;
+        } else {
+            return '';
+        }
+    };
+
     user.refreshSummary = function() {
         var loadingPromise = $timeout(function() {user.loadingState = true;}, Settings.ajaxSpinnerTimeout);
         $http.get('/v1/debts/summary.json').success(function (data) {
@@ -272,6 +298,7 @@ app.controller("LoginController", function ($scope, $http, $timeout, User, Users
                 Users.refreshData();
                 User.mainPage();
             }).error(function (data, status) {
+                $timeout.cancel(loadingPromise);
                 User.loginState = false;
                 if (status == 401) {
                     alert('Не удалось войти');
