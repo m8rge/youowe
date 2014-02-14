@@ -104,7 +104,7 @@ $app->post(
             $destUser,
             $me->getTitle(),
             $_POST['sum'],
-            $_POST['description'],
+            !empty($_POST['description']) ? $_POST['description'] : '',
             $changePasswordToken
         );
 
