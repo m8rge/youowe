@@ -7,7 +7,8 @@ include_once(__DIR__ . '/../components/UserException.php');
 
 $apiVersion = 'v1';
 $app->error(
-    function (\Exception $e) use ($app) {
+    function (\Exception $e) use ($app, $client) {
+        $client->captureException($e);
         $userExceptionCode = null;
         if ($e instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
             $status = 404;
