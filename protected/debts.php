@@ -93,7 +93,7 @@ $app->post(
                 'sourceUserId' => $_SESSION['user']['id'],
                 'destUserId' => $destUser->id,
                 'sum' => $_POST['sum'],
-                'description' => $_POST['description'],
+                'description' => !empty($_POST['description']) ? $_POST['description'] : '',
             )
         );
 
